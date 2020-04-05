@@ -1,0 +1,29 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: caf5fc5e30e1f72438c5567ed9263d8c, type: 3}
+  m_Name: Player Motion Component
+  m_EditorClassIdentifier: 
+  rotateSpeed: 8
+  gravitySpeed: 8
+  forvardSpeed: 12
+  backSpeed: 6
+  sideSpeed: 8
+  forvardAngleApp: 7
+  backAngleApp: 7
+  sideAngleApp: 6
+  dashSpeed: 30
+  dashTime: 7
+  dashStep: 0.2
+  returnTimeDash: 0.25
+  speedIfBeginSlope: 20
+  speedIfEndSlope: 10
+  distanceStartSliding: 6

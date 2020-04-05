@@ -1,0 +1,26 @@
+[
+    {
+        "sceneName" : "[SYSTEMS]",
+        "sceneType" : "independent",
+        "loadTest" : true,
+        "isActive" : false
+    },
+    {
+        "sceneName" : "[START_SCENE]",
+        "sceneType" : "independent",
+        "loadTest" : false,
+        "isActive" : true
+    },
+    {
+        "sceneName" : "[GAME_UI]",
+        "sceneType" : "auxiliary",
+        "loadTest" : true,
+        "isActive" : false
+    },
+    {
+        "sceneName" : "[LOADING]",
+        "sceneType" : "intermediate",
+        "loadTest" : false,
+        "isActive" : true      
+    }
+]
