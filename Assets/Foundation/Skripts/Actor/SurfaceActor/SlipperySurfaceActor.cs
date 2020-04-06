@@ -3,16 +3,10 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public class SlopeActor : Actor, IAcceptVisitor {
-        
-        [SerializeField] private BezierCurves bezierCurvesSliding;
+    public class SlipperySurfaceActor : Actor, IAcceptVisitor {
 
         private void Start() {
-            ThisTransform = transform.GetComponent<Transform>();
-        }
-
-        public Vector3[] GetSlidingPath() {
-            return bezierCurvesSliding.bezierPath;
+            ThisTransform = GetComponent<Transform>();
         }
 
         public void AcceptRayCast(IVisitor _visitor) {
@@ -20,7 +14,7 @@ namespace Scaramouche.Game {
         }
 
         public void AcceptOnTrigger(IVisitor _visitor) {
-            
+            return;
         }
     }
 }

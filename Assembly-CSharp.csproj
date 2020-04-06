@@ -68,8 +68,8 @@
      <Compile Include="Assets\Foundation\Skripts\Actor\GeneralScripts\CharacterMotor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\DefoltSurfaceActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\ObstacleActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\SlidingActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\SlopeActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\SlipperySurfaceActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\SlopeSurfaceActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurves.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurvesActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurvesAdjustment.cs" />
@@ -77,10 +77,8 @@
      <Compile Include="Assets\Foundation\Skripts\Input\InputContoller.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IAcceptVisitor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IAwake.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IGroundDefoltReaction.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\IEnvironmentReaction.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IMovement.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IObstacleReaction.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\ISlopeReaction.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IStateLoad.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\ITask.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\ITick.cs" />

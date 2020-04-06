@@ -10,14 +10,11 @@ namespace Scaramouche.Game {
         [SerializeField] private PlayerMotionComponent motionComponent;
         public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
 
-        private List<IObstacleReaction> obstacleHandles;
-        private List<ISlopeReaction> slopeHandles;
-        private List<IGroundDefoltReaction> groundDefoltHandler;
+        private List<IEnvironmentReaction> environmentReactions;
 
         private CharacterController characterController;
 
         private CameraActor cameraActor;
-        private bool isSliding = false;
 
         private void Start() {
             ThisTransform = transform.GetComponent<Transform>();
@@ -41,9 +38,7 @@ namespace Scaramouche.Game {
         }
 
         private void ListStartInitialize() {
-            obstacleHandles = new List<IObstacleReaction>();
-            slopeHandles = new List<ISlopeReaction>();
-            groundDefoltHandler = new List<IGroundDefoltReaction>();
+            environmentReactions = new List<IEnvironmentReaction>();
         }
 
         private void AddComponentsInHadles(params ControlComponent[] _components) {
@@ -55,14 +50,12 @@ namespace Scaramouche.Game {
         private void AddComponentsInHadles(ControlComponent _component) {
             _component.Initialize(ThisTransform);
             BaseMainHandler mainHandlerTemp = _component.GetMainHandler();
-            if (mainHandlerTemp is IObstacleReaction) obstacleHandles.Add(mainHandlerTemp as IObstacleReaction);
-            if (mainHandlerTemp is ISlopeReaction) slopeHandles.Add(mainHandlerTemp as ISlopeReaction);
-            if (mainHandlerTemp is IGroundDefoltReaction) groundDefoltHandler.Add(mainHandlerTemp as IGroundDefoltReaction);
+            if (mainHandlerTemp is IEnvironmentReaction) environmentReactions.Add(mainHandlerTemp as IEnvironmentReaction);
         }
 
         public void Visit(IAcceptVisitor _acceptVisitor) {
             if (_acceptVisitor is ObstacleActor) VisitHandler((_acceptVisitor as ObstacleActor));
-            if (_acceptVisitor is SlopeActor) VisitHandler((_acceptVisitor as SlopeActor));
+            if (_acceptVisitor is SlopeSurfaceActor) VisitHandler((_acceptVisitor as SlopeSurfaceActor));
             if (_acceptVisitor is DefoltSurfaceActor) VisitHandler((_acceptVisitor as DefoltSurfaceActor));
         }
 
@@ -123,26 +116,26 @@ namespace Scaramouche.Game {
     #endregion
 
     #region VisitHandler
-        private void VisitHandler(ObstacleActor _obstacle) {
-            if (obstacleHandles.Count > 0) {
-                foreach (var component in obstacleHandles) {
-                    component.JumpObstacle(_obstacle);
+        private void VisitHandler(ObstacleActor _actor) {
+            if (environmentReactions.Count > 0) {
+                foreach (var component in environmentReactions) {
+                    component.ObstacleReaction(_actor);
                 }
             }
         }
 
-        private void VisitHandler(SlopeActor _sliding) {
-            if ((!isSliding) && (slopeHandles.Count > 0)) {
-                foreach (var component in slopeHandles) {
-                    isSliding = component.StartSlidingSlope(_sliding);
+        private void VisitHandler(SlopeSurfaceActor _actor) {
+            if (environmentReactions.Count > 0) {
+                foreach (var component in environmentReactions) {
+                    component.SlopeSurfaceReaction(_actor);
                 }
             } 
         }
 
-        private void VisitHandler(DefoltSurfaceActor _defoltSurface) {
-            if ((isSliding) && (groundDefoltHandler.Count > 0)) {
-                foreach (var component in groundDefoltHandler) {
-                    isSliding = !component.GroundStateReset(_defoltSurface);
+        private void VisitHandler(DefoltSurfaceActor _actor) {
+            if (environmentReactions.Count > 0) {
+                foreach (var component in environmentReactions) {
+                    component.DefoltSurfaceReaction(_actor);
                 }
             } 
         }

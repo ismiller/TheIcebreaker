@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public class PlayerMotionHandler : BaseMainHandler, ISlopeReaction, IGroundDefoltReaction, IObstacleReaction, ITick, ITickLate {
+    public class PlayerMotionHandler : BaseMainHandler, IEnvironmentReaction, ITick, ITickLate {
         
         private PlayerMotionComponent motionComponent;
         //------------
@@ -61,22 +61,24 @@ namespace Scaramouche.Game {
             movementStateMachine.currentState.LogicUpdate();
         }
 
-        public bool StartSlidingSlope(SlopeActor _slopeActor) {
-            patchTemp = new Vector3[_slopeActor.GetSlidingPath().Length];
-            for (var i = 0; i < patchTemp.Length; i++) {
-                patchTemp[i] = _slopeActor.GetSlidingPath()[i];
-            }
-            Task.CreateTask(CalculateSlidingPosition()).Start();
-            return true;
-        }
-
-        public bool GroundStateReset(DefoltSurfaceActor _defoltSurfaceActor) {
+        public void DefoltSurfaceReaction(DefoltSurfaceActor _actor) {
             isSlope = false;
             patchTemp = null;
-            return true;
         }
 
-        public void JumpObstacle(ObstacleActor _obstacle) {
+        public void ObstacleReaction(ObstacleActor _obstacle) {
+
+        }
+
+        public void SlopeSurfaceReaction(SlopeSurfaceActor _actor) {
+            patchTemp = new Vector3[_actor.GetSlidingPath().Length];
+            for (var i = 0; i < patchTemp.Length; i++) {
+                patchTemp[i] = _actor.GetSlidingPath()[i];
+            }
+            Task.CreateTask(CalculateSlidingPosition()).Start();
+        }
+
+        public void SlipperySurfaceReaction(SlipperySurfaceActor _actor) {
 
         }
 
