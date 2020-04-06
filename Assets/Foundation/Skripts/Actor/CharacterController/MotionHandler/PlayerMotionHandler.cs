@@ -15,6 +15,7 @@ namespace Scaramouche.Game {
         public readonly DefoltRotateState defoltRotateState;
         public readonly RotateSlidingSlopeState rotateSlidingSlopeState;
         public readonly SlidingSlopeState slidingSlopeState;
+        public readonly SlippingState slippingState;
         public readonly ValkState valkState;
         //------------
         public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
@@ -28,12 +29,20 @@ namespace Scaramouche.Game {
         public bool IsObstacle { get { return isObstacle; } }
         public bool IsSlope { get { return isSlope; } }
         public bool IsBeginSlope { get { return isBeginSlope; } }
+        public bool IsSlippery { get { return isSlippery; } }
         //------------
         private Vector3[] patchTemp;
         private bool isObstacle;
         private bool isSlope;
         private bool isBeginSlope;
-        private int slidingPoint;
+        private bool isSlippery;
+        //-------------
+        private bool isDefoltGround => (surfaceTemp == SurfaceType.Defolt) ? true : false;
+        //-------------
+        private SurfaceType surfaceTemp = SurfaceType.Defolt;
+        private enum SurfaceType {
+            Defolt, Slope, Slippery, None
+        }
 
         public PlayerMotionHandler(CharacterActor _characterActor) : base (_characterActor) {
             motionComponent = _characterActor.MotionComponent;
@@ -45,6 +54,7 @@ namespace Scaramouche.Game {
             defoltRotateState = new DefoltRotateState(this);
             rotateSlidingSlopeState = new RotateSlidingSlopeState(this);
             slidingSlopeState = new SlidingSlopeState(this);
+            slippingState = new SlippingState(this);
             valkState = new ValkState(this);
             //------------
             rotateStateMachine.Initialize(defoltRotateState);
@@ -62,8 +72,11 @@ namespace Scaramouche.Game {
         }
 
         public void DefoltSurfaceReaction(DefoltSurfaceActor _actor) {
-            isSlope = false;
-            patchTemp = null;
+            if (!isDefoltGround) {
+                surfaceTemp = SurfaceType.Defolt;
+                isSlope = isSlippery = false;
+                patchTemp = null;
+            }
         }
 
         public void ObstacleReaction(ObstacleActor _obstacle) {
@@ -71,15 +84,21 @@ namespace Scaramouche.Game {
         }
 
         public void SlopeSurfaceReaction(SlopeSurfaceActor _actor) {
-            patchTemp = new Vector3[_actor.GetSlidingPath().Length];
-            for (var i = 0; i < patchTemp.Length; i++) {
-                patchTemp[i] = _actor.GetSlidingPath()[i];
+            if (isDefoltGround){
+                surfaceTemp = SurfaceType.Slope;
+                patchTemp = new Vector3[_actor.GetSlidingPath().Length];
+                for (var i = 0; i < patchTemp.Length; i++) {
+                    patchTemp[i] = _actor.GetSlidingPath()[i];
+                }
+                Task.CreateTask(CalculateSlidingPosition()).Start();
             }
-            Task.CreateTask(CalculateSlidingPosition()).Start();
         }
 
         public void SlipperySurfaceReaction(SlipperySurfaceActor _actor) {
-
+            if (isDefoltGround) {
+                surfaceTemp = SurfaceType.Slippery;
+                isSlippery = true;
+            }
         }
 
         private IEnumerator CalculateSlidingPosition() {

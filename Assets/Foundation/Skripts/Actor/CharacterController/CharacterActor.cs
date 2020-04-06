@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 namespace Scaramouche.Game {
-    public class CharacterActor : Actor, IVisitor {
+    public class CharacterActor : Actor, IVisitorEnvironment {
 
         [SerializeField] private CharacterActorParametrs parametrsComponent;
         [SerializeField] private PlayerMotionComponent motionComponent;
@@ -51,12 +51,6 @@ namespace Scaramouche.Game {
             _component.Initialize(ThisTransform);
             BaseMainHandler mainHandlerTemp = _component.GetMainHandler();
             if (mainHandlerTemp is IEnvironmentReaction) environmentReactions.Add(mainHandlerTemp as IEnvironmentReaction);
-        }
-
-        public void Visit(IAcceptVisitor _acceptVisitor) {
-            if (_acceptVisitor is ObstacleActor) VisitHandler((_acceptVisitor as ObstacleActor));
-            if (_acceptVisitor is SlopeSurfaceActor) VisitHandler((_acceptVisitor as SlopeSurfaceActor));
-            if (_acceptVisitor is DefoltSurfaceActor) VisitHandler((_acceptVisitor as DefoltSurfaceActor));
         }
 
         private IEnumerator SetPlayerInCamera() {
@@ -116,7 +110,7 @@ namespace Scaramouche.Game {
     #endregion
 
     #region VisitHandler
-        private void VisitHandler(ObstacleActor _actor) {
+        public void Visit(ObstacleActor _actor) {
             if (environmentReactions.Count > 0) {
                 foreach (var component in environmentReactions) {
                     component.ObstacleReaction(_actor);
@@ -124,7 +118,7 @@ namespace Scaramouche.Game {
             }
         }
 
-        private void VisitHandler(SlopeSurfaceActor _actor) {
+        public void Visit(SlopeSurfaceActor _actor) {
             if (environmentReactions.Count > 0) {
                 foreach (var component in environmentReactions) {
                     component.SlopeSurfaceReaction(_actor);
@@ -132,10 +126,18 @@ namespace Scaramouche.Game {
             } 
         }
 
-        private void VisitHandler(DefoltSurfaceActor _actor) {
+        public void Visit(DefoltSurfaceActor _actor) {
             if (environmentReactions.Count > 0) {
                 foreach (var component in environmentReactions) {
                     component.DefoltSurfaceReaction(_actor);
+                }
+            } 
+        }
+
+        public void Visit(SlipperySurfaceActor _actor) {
+            if (environmentReactions.Count > 0) {
+                foreach (var component in environmentReactions) {
+                    component.SlipperySurfaceReaction(_actor);
                 }
             } 
         }

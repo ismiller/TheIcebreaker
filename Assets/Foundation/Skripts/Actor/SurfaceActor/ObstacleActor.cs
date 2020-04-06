@@ -15,11 +15,11 @@ namespace Scaramouche.Game {
             ThisTransform = transform.GetComponent<Transform>();
         }
 
-        public void AcceptRayCast(IVisitor _visitor) {
-            _visitor.Visit(this);
+        public void AcceptRayCast(IVisitorEnvironment _visitor) {
+            //_visitor.Visit(this);
         }
 
-        public void AcceptOnTrigger(IVisitor _visitor) {
+        public void AcceptOnTrigger(IVisitorEnvironment _visitor) {
             _visitor.Visit(this);
         }
     }

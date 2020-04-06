@@ -21,9 +21,8 @@ namespace Scaramouche.Game {
         }
 
         public void LogicUpdate() {
-            if(motionHandler.IsSlope) {
-                stateMachine.ChangeMovementState(motionHandler.slidingSlopeState);
-            }
+            if (motionHandler.IsSlope) { stateMachine.ChangeMovementState(motionHandler.slidingSlopeState); }
+            if (motionHandler.IsSlippery) { stateMachine.ChangeMovementState(motionHandler.slippingState); }
         }
 
         public void PhisicUpdate() {

@@ -63,6 +63,7 @@
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\DefoltRotateState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\RotateSlidingSlopeState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\SlidingSlopeState.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\SlippingState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\ValkState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\ControlComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\GeneralScripts\CharacterMotor.cs" />
@@ -81,10 +82,8 @@
      <Compile Include="Assets\Foundation\Skripts\Interface\IMovement.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IStateLoad.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\ITask.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\ITick.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\ITickFixed.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\ITickLate.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IVisitor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\IVisitorEnvironment.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\TickInterface.cs" />
      <Compile Include="Assets\Foundation\Skripts\Managers\Component\MonoHostComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Managers\InputManager\InputManager.cs" />
      <Compile Include="Assets\Foundation\Skripts\Managers\LoadSceneManager\BaseLoadScene.cs" />

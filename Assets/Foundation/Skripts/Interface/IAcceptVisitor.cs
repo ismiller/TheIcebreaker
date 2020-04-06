@@ -1,8 +1,6 @@
 ﻿namespace Scaramouche.Game {
     public interface IAcceptVisitor {
-
-        void AcceptRayCast(IVisitor _visitor);
-        void AcceptOnTrigger(IVisitor _visitor);
-
+        void AcceptRayCast(IVisitorEnvironment _visitor);
+        void AcceptOnTrigger(IVisitorEnvironment _visitor);
     }
 }
