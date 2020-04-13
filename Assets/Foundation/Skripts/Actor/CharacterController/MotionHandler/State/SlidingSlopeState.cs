@@ -14,9 +14,10 @@ namespace Scaramouche.Game {
         }
 
         public void Enter() {
-            targetPoint = characterMotor.SearchStartPointInArray(out nextPoint);
+            rotateDirection = targetPoint = characterMotor.SearchStartPointInArray(out nextPoint);
             direction = characterMotor.ComputeDirectionDependPoint(targetPoint);  
             currentSpeed = characterMotor.ComputeSlidingSpeed();   
+            playerAnimator.SetBool("isSliding", true);
         }
 
         public void LogicUpdate() {
@@ -26,15 +27,19 @@ namespace Scaramouche.Game {
         public void PhisicUpdate() {
             if(Vector3.Distance(player.position, targetPoint) < 1) {
                 if ((++nextPoint) < motionHandler.PatchTemp.Length) {
-                    targetPoint = motionHandler.PatchTemp[nextPoint];
+                    rotateDirection = targetPoint = motionHandler.PatchTemp[nextPoint];
                     direction = characterMotor.ComputeDirectionDependPoint(targetPoint);
-                }
+                    rotateDirection -= player.position;
+                } else { rotateDirection = rotateDirection.normalized; }
             } 
+            if (rotateDirection != Vector3.zero) {
+                characterMotor.RotateDirection(rotateDirection); 
+            }
             characterMotor.MovementSlidingSlope(direction);
         }
 
         public void Exit() {
-            
+            playerAnimator.SetBool("isSliding", false);
         }
 
         private IEnumerator EndSliding() {
@@ -42,7 +47,7 @@ namespace Scaramouche.Game {
                 currentSpeed = Mathf.MoveTowards(currentSpeed, 0, Time.deltaTime);
                 yield return null;
             }
-            stateMachine.ChangeMovementState(motionHandler.valkState);
+            motionStateMachine.ChangeMovementState(motionHandler.valkState);
         }
     }
 }

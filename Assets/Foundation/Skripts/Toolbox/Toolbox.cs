@@ -4,14 +4,14 @@ using System;
 
 namespace Scaramouche.Game {
     public class Toolbox : SinglManager<Toolbox> {
-        private static Transform mainCamera;
+
         private Dictionary<Type, object> dataManager = new Dictionary<Type, object>();
 
         public static void Add(object obj) {
             var add = obj;
             var manager = obj as ManagerBase;
             
-            if(manager) {
+            if (manager) {
                 add = Instantiate(manager);
             } else return;
 
@@ -26,7 +26,7 @@ namespace Scaramouche.Game {
         }
 
         private static void StartAwake(object obj) {
-            if(obj is IAwake) {
+            if (obj is IAwake) {
                 (obj as IAwake).OnAwake();
             } else return;
         }

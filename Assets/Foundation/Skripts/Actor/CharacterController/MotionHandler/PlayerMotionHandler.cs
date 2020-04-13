@@ -3,39 +3,40 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public class PlayerMotionHandler : BaseMainHandler, IEnvironmentReaction, ITick, ITickLate {
+    public class PlayerMotionHandler : BaseMainHandler, IVisitorEnvironment, IUpdateActor, ILateUpdateActor {
         
         private PlayerMotionComponent motionComponent;
         //------------
         private CharacterController characterController;
-        private MotionStateMachine rotateStateMachine;
         private MotionStateMachine movementStateMachine;
         private CharacterMotor characterMotor;
+        private Animator playerAnimator;
         //------------
-        public readonly DefoltRotateState defoltRotateState;
-        public readonly RotateSlidingSlopeState rotateSlidingSlopeState;
         public readonly SlidingSlopeState slidingSlopeState;
-        public readonly SlippingState slippingState;
+        public readonly JumpObstacleState jumpObstacleState;
         public readonly ValkState valkState;
+        //------------
+        private Vector3[] patchTemp;
+        private Vector3 obstaclePoint;
+        private bool isObstacle;
+        private bool isSlope;
+        private bool isBeginSlope;
+        private bool isSlippery;
         //------------
         public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
         //------------
-        public MotionStateMachine RotateStateMachine { get { return rotateStateMachine; } }
         public MotionStateMachine MovementStateMachine { get { return movementStateMachine; } }
         public CharacterMotor CharacterMotor { get { return characterMotor; } }
+        public Animator PlayerAnimator { get { return playerAnimator; } }
         //------------
         public Vector3[] PatchTemp { get { return patchTemp; } }
+        public Vector3 ObstaclePoint { get { return obstaclePoint; } }
+        
         public bool IsGraund { get { return characterController.isGrounded; } }
         public bool IsObstacle { get { return isObstacle; } }
         public bool IsSlope { get { return isSlope; } }
         public bool IsBeginSlope { get { return isBeginSlope; } }
         public bool IsSlippery { get { return isSlippery; } }
-        //------------
-        private Vector3[] patchTemp;
-        private bool isObstacle;
-        private bool isSlope;
-        private bool isBeginSlope;
-        private bool isSlippery;
         //-------------
         private bool isDefoltGround => (surfaceTemp == SurfaceType.Defolt) ? true : false;
         //-------------
@@ -46,58 +47,60 @@ namespace Scaramouche.Game {
 
         public PlayerMotionHandler(CharacterActor _characterActor) : base (_characterActor) {
             motionComponent = _characterActor.MotionComponent;
-            characterController = _characterActor.GetComponent<CharacterController>();
-            rotateStateMachine = new MotionStateMachine();
+            characterController = _characterActor.PlayerCharacterController;
             movementStateMachine = new MotionStateMachine();
             characterMotor = new CharacterMotor(this);
+            playerAnimator = _characterActor.PlayerAnimator;
             //------------
-            defoltRotateState = new DefoltRotateState(this);
-            rotateSlidingSlopeState = new RotateSlidingSlopeState(this);
             slidingSlopeState = new SlidingSlopeState(this);
-            slippingState = new SlippingState(this);
+            jumpObstacleState = new JumpObstacleState(this);
             valkState = new ValkState(this);
             //------------
-            rotateStateMachine.Initialize(defoltRotateState);
             movementStateMachine.Initialize(valkState);
+            //------------
+            Task.CreateTask(GraundRayCast()).Start();
+            Task.CreateTask(ForvardRayCast()).Start();
         }
 
-        public void Tick() {
-            rotateStateMachine.currentState.PhisicUpdate();
+        public void UpdateActor() {
             movementStateMachine.currentState.PhisicUpdate();
         }
 
-        public void TickLate() {
-            rotateStateMachine.currentState.LogicUpdate();
+        public void LateUpdateActor() {
             movementStateMachine.currentState.LogicUpdate();
         }
 
-        public void DefoltSurfaceReaction(DefoltSurfaceActor _actor) {
-            if (!isDefoltGround) {
-                surfaceTemp = SurfaceType.Defolt;
-                isSlope = isSlippery = false;
-                patchTemp = null;
-            }
-        }
-
-        public void ObstacleReaction(ObstacleActor _obstacle) {
-
-        }
-
-        public void SlopeSurfaceReaction(SlopeSurfaceActor _actor) {
-            if (isDefoltGround){
-                surfaceTemp = SurfaceType.Slope;
-                patchTemp = new Vector3[_actor.GetSlidingPath().Length];
-                for (var i = 0; i < patchTemp.Length; i++) {
-                    patchTemp[i] = _actor.GetSlidingPath()[i];
+        private IEnumerator GraundRayCast() {
+            while (true) {
+                if (motionComponent.GroundRayCast) {
+                    Ray downRay = new Ray(CharacterTransform.position, Vector3.down);
+                    if (Physics.Raycast(downRay, out RaycastHit hit, 1.3f)) {
+                        yield return new WaitForEndOfFrame();
+                        if (hit.transform.TryGetComponent<IAcceptVisitorRayCast>(out IAcceptVisitorRayCast _actor)) {
+                            _actor.AcceptDownCast(this);
+                            yield return new WaitForEndOfFrame();
+                        }
+                    }
+                    yield return new WaitForEndOfFrame();
                 }
-                Task.CreateTask(CalculateSlidingPosition()).Start();
             }
         }
 
-        public void SlipperySurfaceReaction(SlipperySurfaceActor _actor) {
-            if (isDefoltGround) {
-                surfaceTemp = SurfaceType.Slippery;
-                isSlippery = true;
+        private IEnumerator ForvardRayCast() {
+            while (true) {
+                Vector3 startPosition = new Vector3(CharacterTransform.position.x, .3f, CharacterTransform.position.z);
+                Ray forwardRay = new Ray(startPosition, CharacterTransform.forward);
+                if (Physics.Raycast(forwardRay, out RaycastHit hit, 1.3f)) {
+                    yield return new WaitForEndOfFrame();
+                    if (hit.transform.TryGetComponent<IAcceptVisitorRayCast>(out IAcceptVisitorRayCast _actor)) {
+                        obstaclePoint = hit.collider.ClosestPoint(CharacterTransform.position);
+                        yield return new WaitForEndOfFrame();
+                        if (Vector3.Distance(CharacterTransform.position, obstaclePoint) < 0.8f) {
+                            _actor.AcceptForwardCast(this);
+                        }
+                    }
+                } else { isObstacle = false; }
+                yield return new WaitForEndOfFrame();
             }
         }
 
@@ -119,6 +122,29 @@ namespace Scaramouche.Game {
                     }
                 }
                 yield return new WaitForEndOfFrame();
+            }
+        }
+
+        public void Visit(ObstacleActor _actor) {   
+            isObstacle = true;
+        }
+
+        public void Visit(SlopeSurfaceActor _actor) {
+            if (isDefoltGround){
+                surfaceTemp = SurfaceType.Slope;
+                patchTemp = new Vector3[_actor.GetSlidingPath().Length];
+                for (var i = 0; i < patchTemp.Length; i++) {
+                    patchTemp[i] = _actor.GetSlidingPath()[i];
+                }
+                Task.CreateTask(CalculateSlidingPosition()).Start();
+            }
+        }
+
+        public void Visit(DefoltSurfaceActor _actor) {
+            if (!isDefoltGround) {
+                surfaceTemp = SurfaceType.Defolt;
+                isSlope = isSlippery = false;
+                patchTemp = null;
             }
         }
     }

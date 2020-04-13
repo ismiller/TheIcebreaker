@@ -11,8 +11,11 @@ namespace Scaramouche.Game {
         private Transform player;
         //------------
         private Vector3 moveDirection;
+        private float speed;
         private float currentSpeed;
         private float distanceTemp;
+        private Vector2 currenDirection;
+        //-------------
 
         public CharacterMotor(PlayerMotionHandler _motionHandler) {
             motionHandler = _motionHandler;
@@ -23,19 +26,24 @@ namespace Scaramouche.Game {
         }
 
         public void MovementDirectional(Vector2 _direction) { 
-            if (motionHandler.IsGraund) {
-                moveDirection = ComputeDirectionDependCamera(_direction);
+            if (_direction != Vector2.zero) { 
+                currenDirection = _direction; 
+                moveDirection = ComputeDirectionDependCamera(currenDirection);
                 currentSpeed = ComputeSpeedDependDirection(moveDirection);
-            } else { moveDirection = Vector3.zero; }
-            Move(moveDirection, currentSpeed);
+            } else {
+                moveDirection = ComputeDirectionDependCamera(currenDirection);
+                currentSpeed = Mathf.MoveTowards(currentSpeed, .0f, .5f);
+            }
+            Move(moveDirection, currentSpeed, true);
         }
 
         public bool MovementDash(Vector2 _direction) {
+            currenDirection = Vector2.zero;
             if (distanceTemp <= 0) { distanceTemp = motionComponent.DashTime; }
             moveDirection = ComputeDirectionDependCamera(_direction);
             distanceTemp -= motionComponent.DashStep;
             if (distanceTemp > 0) { 
-                Move(moveDirection, motionComponent.DashSpeed);
+                Move(moveDirection, motionComponent.DashSpeed, true);
                 return true; 
             } else {
                 distanceTemp = 0;
@@ -43,11 +51,24 @@ namespace Scaramouche.Game {
             }
         }
 
+        public bool JumpObstacle(Vector2 _direction) {
+            currenDirection = Vector2.zero;
+            if (distanceTemp <= 0) { distanceTemp = motionComponent.JumpTime; }
+            moveDirection = new Vector3(_direction.x, 0, _direction.y);
+            distanceTemp -= motionComponent.JumpStep;
+            if(distanceTemp > 0) {
+                Move(moveDirection, motionComponent.JumpSpeed, false);
+                return true;
+            } else {
+                distanceTemp = 0;
+                return false;
+            }
+        }
+
         public void MovementSlidingSlope(Vector2 _direction) {
-            if (motionHandler.IsGraund) {
-                moveDirection = new Vector3(_direction.x, 0, _direction.y);
-            } 
-            Move(moveDirection, ComputeSlidingSpeed());
+            currenDirection = Vector2.zero;
+            moveDirection = new Vector3(_direction.x, 0, _direction.y);
+            Move(moveDirection, ComputeSlidingSpeed(), true);
         }
 
         public void RotateDirection(Vector3 _direction) {
@@ -104,9 +125,9 @@ namespace Scaramouche.Game {
             return _direction;
         }
 
-        private void Move(Vector3 _direction, float _speed) {
+        private void Move(Vector3 _direction, float _speed, bool _isGravity) {
             _direction = ComputeDirectionDependSpeed(_direction, _speed);
-            _direction = ApplyGravity(_direction);
+            if (_isGravity) { _direction = ApplyGravity(_direction); }
             characterController.Move(Vector3.ClampMagnitude(_direction, _speed));
         }
     }

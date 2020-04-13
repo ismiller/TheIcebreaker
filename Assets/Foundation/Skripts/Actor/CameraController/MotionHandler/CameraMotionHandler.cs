@@ -37,7 +37,7 @@ namespace Scaramouche.Game {
 
         public void TickLate() {
             SetPointView();
-            if (valueTurn != 0) { Rotation(); }
+            if ((motionComponent.ISRotate) && (valueTurn != 0)) { Rotation(); }
             Movement();
         }
 

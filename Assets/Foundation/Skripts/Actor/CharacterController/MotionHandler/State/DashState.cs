@@ -26,7 +26,7 @@ namespace Scaramouche.Game {
         }
 
         public void LogicUpdate() {
-            if (stopDash) { stateMachine.ChangeMovementState(lastState); }
+            if (stopDash) { motionStateMachine.ChangeMovementState(lastState); }
         }
 
         public void PhisicUpdate() {
@@ -44,7 +44,7 @@ namespace Scaramouche.Game {
 
         private IEnumerator DashMove() {
             while (!stopDash) {
-                yield return new WaitForEndOfFrame();
+                yield return null;
                 if (!characterMotor.MovementDash(direction)) { 
                     stopDash = true; 
                 }

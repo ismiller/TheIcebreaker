@@ -3,23 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public class ObstacleActor : Actor, IAcceptVisitor {
+    public class ObstacleActor : Actor, IAcceptVisitorRayCast {
         
-        [SerializeField] private BezierCurves patch;
-
-        public Vector3[] GetSlidingPath() {
-            return patch.bezierPath;
-        }
-
         public void Start() {
             ThisTransform = transform.GetComponent<Transform>();
         }
 
-        public void AcceptRayCast(IVisitorEnvironment _visitor) {
-            //_visitor.Visit(this);
+        public void AcceptDownCast(IVisitorEnvironment _visitor) {
+
         }
 
-        public void AcceptOnTrigger(IVisitorEnvironment _visitor) {
+        public void AcceptForwardCast(IVisitorEnvironment _visitor) {
             _visitor.Visit(this);
         }
     }

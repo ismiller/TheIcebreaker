@@ -16,31 +16,34 @@ namespace Scaramouche.Game {
         }
 
         public void Enter() {
+            InputManager.GetMousePoint += (Vector3 _value) => rotateDirection = _value;
             currentSpeed = motionComponent.ForvardSpeed;
             InputManager.GetKeyDash += SetInDash;
         }
 
         public void LogicUpdate() {
-            if (motionHandler.IsSlope) { stateMachine.ChangeMovementState(motionHandler.slidingSlopeState); }
-            if (motionHandler.IsSlippery) { stateMachine.ChangeMovementState(motionHandler.slippingState); }
+            if (motionHandler.IsSlope) { motionStateMachine.ChangeMovementState(motionHandler.slidingSlopeState); }
         }
 
         public void PhisicUpdate() {
+            characterMotor.RotateDirection(rotateDirection - player.position);
             characterMotor.MovementDirectional(direction);
         }
 
         public void Exit() {
+            InputManager.GetMousePoint -= (Vector3 _value) => direction = _value;
             InputManager.GetKeyDash -= SetInDash;
         }
 
         private void SetInDash(bool _value) {
-            if (direction != Vector2.zero) {
-                if (dashPossible) {
-                    stateMachine.ChangeMovementState(dashState.Start(direction));
+            if (motionHandler.IsObstacle) {
+                motionStateMachine.ChangeMovementState(motionHandler.jumpObstacleState);
+            } else {
+                if ((direction != Vector2.zero) && dashPossible) {
+                    motionStateMachine.ChangeMovementState(dashState.Start(direction));
                     Task.CreateTask(DashReturn()).Start();
                 }
             }
         }
-
     }
 }

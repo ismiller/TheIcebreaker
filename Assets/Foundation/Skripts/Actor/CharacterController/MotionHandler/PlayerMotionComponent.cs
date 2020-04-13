@@ -5,7 +5,8 @@ using UnityEngine;
 namespace Scaramouche.Game {    
     [CreateAssetMenu(fileName = "Test Motion Handler", menuName = "Player Component/Test Motion Handler")]
     public class PlayerMotionComponent : ControlComponent {
-        
+        [SerializeField] private bool groundRayCast;
+        [SerializeField] private bool sphereRayCast;
         [Header("Rotate Parametrs")]
         [SerializeField] [Range(0, 20)] private float rotateSpeed;
         [Header("Gravity Parametrs")]
@@ -22,10 +23,17 @@ namespace Scaramouche.Game {
         [SerializeField] [Range(0, 20)] private float dashTime;
         [SerializeField] [Range(0, 1f)] private float dashStep; 
         [SerializeField] [Range(0, 20)] private float returnTimeDash;
+        [Header("Jump An Obstacle")] 
+        [SerializeField] [Range(0, 10)] private float jumpSpeed;
+        [SerializeField] [Range(0, 10)] private float jumpTime;
+        [SerializeField] [Range(0, 1f)] private float jumpStep; 
         [Header("Sliding Parametrs")] 
         [SerializeField] [Range(0, 30)] private float speedIfBeginSlope;
         [SerializeField] [Range(0, 30)] private float speedIfEndSlope; 
         [SerializeField] [Range(0, 10)] private float distanceStartSliding;
+        //-------------
+        public bool GroundRayCast { get { return groundRayCast; } }
+        public bool SphererayCast { get { return sphereRayCast; } }
         //-------------
         public float RotateSpeed { get { return rotateSpeed; } }
         //-------------
@@ -42,6 +50,10 @@ namespace Scaramouche.Game {
         public float DashTime { get { return dashTime; } }
         public float DashStep { get { return dashStep; } }
         public float ReturnTimeDash { get { return returnTimeDash; } }
+        //-------------
+        public float JumpSpeed { get { return jumpSpeed; } }
+        public float JumpTime { get { return jumpTime; } }
+        public float JumpStep { get { return jumpStep; } }
         //-------------
         public float SpeedIfBeginSlope { get { return speedIfBeginSlope; } }
         public float SpeedIfEndSlope { get { return speedIfEndSlope; } }

@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 namespace Scaramouche.Game {
     [CreateAssetMenu(fileName = "InputManager", menuName = "Managers/InputManagers")]

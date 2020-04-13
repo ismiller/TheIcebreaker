@@ -8,11 +8,12 @@ namespace Scaramouche.Game {
         protected static PlayerMotionComponent motionComponent;
         protected static PlayerMotionHandler motionHandler;
         protected static CharacterMotor characterMotor;
+        protected static Animator playerAnimator;
         protected static Transform player;
 
-        protected MotionStateMachine stateMachine;
+        protected MotionStateMachine motionStateMachine;
         protected Vector2 direction;
-        protected Vector3 moveDirection;
+        protected Vector3 rotateDirection;
         protected bool dashPossible;
         protected bool isDash;
 
@@ -20,8 +21,9 @@ namespace Scaramouche.Game {
             motionHandler = _motionHandler;
             characterMotor = _motionHandler.CharacterMotor;
             motionComponent = _motionHandler.MotionComponent;
-            stateMachine = _motionHandler.MovementStateMachine;
+            motionStateMachine = _motionHandler.MovementStateMachine;
             player = _motionHandler.CharacterTransform;
+            playerAnimator = _motionHandler.PlayerAnimator;
         }
 
         protected IEnumerator DashReturn() {

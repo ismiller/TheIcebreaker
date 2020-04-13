@@ -17,3 +17,7 @@ MonoBehaviour:
   skinWidth: 0.1
   radius: 0.5
   height: 2
+  animatorController: {fileID: 9100000, guid: 9c4ba5ac9146226458842f7b2d800f31, type: 2}
+  playerAvatar: {fileID: 0}
+  aplayRootMotion: 0
+  cullingMode: 0
