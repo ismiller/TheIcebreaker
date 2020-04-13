@@ -20,7 +20,7 @@ namespace Scaramouche.Game {
             jumpTask = Task.CreateTask(Jump());
             startJump = stopJump = false;
             controller.height = 1;
-            controller.center = new Vector3(0, 0.5f, 0);
+            controller.center = new Vector3(0, 0.7f, 0);
             playerAnimator.SetTrigger("JumpObstacle");
         }
 

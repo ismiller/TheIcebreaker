@@ -34,6 +34,7 @@ namespace Scaramouche.Game {
                 if (!startDash) {
                     startDash = true;
                     dashTask.Start();
+                    playerAnimator.SetTrigger("Dash");
                 }
             } else { stopDash = true; }
         }

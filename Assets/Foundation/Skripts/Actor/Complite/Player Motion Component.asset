@@ -23,7 +23,7 @@ MonoBehaviour:
   backAngleApp: 7
   sideAngleApp: 6
   dashSpeed: 30
-  dashTime: 7
+  dashTime: 3
   dashStep: 0.2
   returnTimeDash: 0.25
   jumpSpeed: 5

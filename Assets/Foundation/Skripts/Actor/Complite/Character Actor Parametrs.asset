@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   slopeLimit: 30
   stepOffset: 0.3
-  skinWidth: 0.1
+  skinWidth: 0.01
   radius: 0.5
   height: 2
   animatorController: {fileID: 9100000, guid: 9c4ba5ac9146226458842f7b2d800f31, type: 2}

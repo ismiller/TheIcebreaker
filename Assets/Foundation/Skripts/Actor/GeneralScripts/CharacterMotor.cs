@@ -11,10 +11,9 @@ namespace Scaramouche.Game {
         private Transform player;
         //------------
         private Vector3 moveDirection;
-        private float speed;
+        private Vector2 currenDirection;
         private float currentSpeed;
         private float distanceTemp;
-        private Vector2 currenDirection;
         //-------------
 
         public CharacterMotor(PlayerMotionHandler _motionHandler) {
@@ -72,9 +71,11 @@ namespace Scaramouche.Game {
         }
 
         public void RotateDirection(Vector3 _direction) {
-            float speed = motionComponent.RotateSpeed * Time.deltaTime;
-            Quaternion newRotation = Quaternion.Lerp(player.rotation, Quaternion.LookRotation(_direction), speed);
-            player.rotation = new Quaternion(player.rotation.x, newRotation.y, player.rotation.z, newRotation.w);
+            if (_direction != Vector3.zero) {
+                float speed = motionComponent.RotateSpeed * Time.deltaTime;
+                Quaternion newRotation = Quaternion.Lerp(player.rotation, Quaternion.LookRotation(_direction), speed);
+                player.rotation = new Quaternion(player.rotation.x, newRotation.y, player.rotation.z, newRotation.w);
+            }
         }
 
         public Vector3 SearchStartPointInArray(out int _numberPoint) {
@@ -121,7 +122,7 @@ namespace Scaramouche.Game {
 
         public Vector3 ApplyGravity(Vector3 _direction) {
             if(!motionHandler.IsGraund) { _direction.y = -motionComponent.GravitySpeed * 2.5f * Time.deltaTime;             
-            } else { _direction.y = -1.0f; }
+            } else {  _direction.y = -1.0f; }
             return _direction;
         }
 

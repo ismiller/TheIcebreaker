@@ -22,6 +22,7 @@ namespace Scaramouche.Game {
         private bool isSlope;
         private bool isBeginSlope;
         private bool isSlippery;
+        private bool isPlatform;
         //------------
         public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
         //------------
@@ -37,12 +38,13 @@ namespace Scaramouche.Game {
         public bool IsSlope { get { return isSlope; } }
         public bool IsBeginSlope { get { return isBeginSlope; } }
         public bool IsSlippery { get { return isSlippery; } }
+        public bool IsPlatform { get { return isPlatform; } }
         //-------------
         private bool isDefoltGround => (surfaceTemp == SurfaceType.Defolt) ? true : false;
         //-------------
         private SurfaceType surfaceTemp = SurfaceType.Defolt;
         private enum SurfaceType {
-            Defolt, Slope, Slippery, None
+            Defolt, Slope, MovePlatform, None
         }
 
         public PlayerMotionHandler(CharacterActor _characterActor) : base (_characterActor) {
@@ -88,7 +90,7 @@ namespace Scaramouche.Game {
 
         private IEnumerator ForvardRayCast() {
             while (true) {
-                Vector3 startPosition = new Vector3(CharacterTransform.position.x, .3f, CharacterTransform.position.z);
+                Vector3 startPosition = new Vector3(CharacterTransform.position.x, CharacterTransform.position.y - 0.5f, CharacterTransform.position.z);
                 Ray forwardRay = new Ray(startPosition, CharacterTransform.forward);
                 if (Physics.Raycast(forwardRay, out RaycastHit hit, 1.3f)) {
                     yield return new WaitForEndOfFrame();
@@ -142,10 +144,20 @@ namespace Scaramouche.Game {
 
         public void Visit(DefoltSurfaceActor _actor) {
             if (!isDefoltGround) {
+                CharacterTransform.SetParent(null);
                 surfaceTemp = SurfaceType.Defolt;
-                isSlope = isSlippery = false;
+                isSlope = isSlippery = isPlatform = false;
                 patchTemp = null;
             }
+        }
+
+        public void Visit(MovePlatformActor _actor) {
+            if (isDefoltGround) {
+                CharacterTransform.SetParent(_actor.ThisTransform);
+                surfaceTemp = SurfaceType.MovePlatform; 
+                isPlatform = true; 
+                _actor.StartMove();
+            }   
         }
     }
 }
