@@ -9,19 +9,19 @@ namespace Scaramouche.Game {
         [SerializeField] private CameraMotionComponent motionComponent;
         public CameraMotionComponent MotionComponent { get { return motionComponent; } }
 
-        private static Transform thisTransform;
+        private static Transform mainCamera;
 
         public static Vector3 Right {
-            get { return thisTransform.right; }
+            get { return mainCamera.right; }
         }
 
         public static Vector3 Up {
-            get { return thisTransform.up; }
+            get { return mainCamera.up; }
         }
 
         private void Start() {
-            base.ThisTransform = thisTransform = transform.GetComponent<Transform>();
-            motionComponent.Initialize(thisTransform);
+            mainCamera = Player;
+            motionComponent.Initialize(Player);
         }
 
         public void SetPlayer(Transform _player) {

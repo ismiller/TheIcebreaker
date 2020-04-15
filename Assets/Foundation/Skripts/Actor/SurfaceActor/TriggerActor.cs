@@ -6,7 +6,7 @@ namespace Scaramouche.Game {
     public class TriggerActor : Actor {
         
         private void Start() {
-            ThisTransform = transform.GetComponent<Transform>();
+
         }
     }
 }

@@ -26,8 +26,8 @@ MonoBehaviour:
   dashTime: 3
   dashStep: 0.2
   returnTimeDash: 0.25
-  jumpSpeed: 5
-  jumpTime: 4
+  jumpSpeed: 4
+  jumpTime: 7
   jumpStep: 0.1
   speedIfBeginSlope: 20
   speedIfEndSlope: 10

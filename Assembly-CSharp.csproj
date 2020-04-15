@@ -2,8 +2,6 @@
 <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <LangVersion>latest</LangVersion>
-    <CscToolPath>C:\Program Files\Unity\Hub\Editor\2019.3.0f1\Editor\Data\Tools\RoslynScripts</CscToolPath>
-    <CscToolExe>unity_csc.bat</CscToolExe>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,22 +45,14 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="UnityEngine">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2019.3.0f1\Editor\Data\Managed/UnityEngine/UnityEngine.dll</HintPath>
-    </Reference>
-    <Reference Include="UnityEditor">
-      <HintPath>C:\Program Files\Unity\Hub\Editor\2019.3.0f1\Editor\Data\Managed/UnityEditor.dll</HintPath>
-    </Reference>
-  </ItemGroup>
-  <ItemGroup>
      <Compile Include="Assets\Foundation\Skripts\Actor\Actor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\BaseMainHandler\BaseMainHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\CameraActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraMotionComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraMotionHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraParametr.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\ActorParametrs\CharacterActorParametrs.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\CharacterActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\CharacterActorParametrs.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\Data\InputDataForState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\MotionStateMachine.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\PlayerMotionComponent.cs" />
@@ -219,6 +209,9 @@
  </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.AIModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
@@ -396,6 +389,9 @@
  </Reference>
  <Reference Include="UnityEngine.XRModule">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.XRModule.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor">
+ <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
  </Reference>
  <Reference Include="Newtonsoft.Json">
  <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
@@ -756,7 +752,7 @@
  </Reference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
   </Target>

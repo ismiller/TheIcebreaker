@@ -153,7 +153,7 @@ namespace Scaramouche.Game {
 
         public void Visit(MovePlatformActor _actor) {
             if (isDefoltGround) {
-                CharacterTransform.SetParent(_actor.ThisTransform);
+                CharacterTransform.SetParent(_actor.Player);
                 surfaceTemp = SurfaceType.MovePlatform; 
                 isPlatform = true; 
                 _actor.StartMove();

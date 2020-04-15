@@ -22,7 +22,7 @@ namespace Scaramouche.Game {
         private float rightTurnArea;
 
         public CameraMotionHandler(CameraActor _cameraActor) : base(_cameraActor) {
-            camera = _cameraActor.ThisTransform;
+            camera = _cameraActor.Player;
             motionComponent = _cameraActor.MotionComponent;
             cameraRotate = new Vector2(camera.eulerAngles.x, camera.eulerAngles.y);
             InputManager.GetKeyRotate += _value => valueKeyTurn = _value;

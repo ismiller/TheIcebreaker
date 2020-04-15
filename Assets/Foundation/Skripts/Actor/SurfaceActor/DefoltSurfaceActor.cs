@@ -6,7 +6,7 @@ namespace Scaramouche.Game {
     public class DefoltSurfaceActor : Actor, IAcceptVisitorRayCast {
 
         private void Start() {
-            ThisTransform = transform.GetComponent<Transform>();
+
         }
 
         public void AcceptDownCast(IVisitorEnvironment _visitor) {

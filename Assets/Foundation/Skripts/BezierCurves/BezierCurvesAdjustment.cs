@@ -11,14 +11,14 @@ namespace Scaramouche.Game {
 
         void OnDrawGizmos() {
             Gizmos.color = color;
-            Gizmos.DrawCube(ThisTransform.position, Vector3.one * scale);
+            Gizmos.DrawCube(Player.position, Vector3.one * scale);
             Gizmos.DrawSphere(mirror.position, scale/2);
-            Gizmos.DrawLine(ThisTransform.position, mirror.position);
+            Gizmos.DrawLine(Player.position, mirror.position);
         }
 
         #if UNITY_EDITOR
         void LateUpdate() {
-            mirror.position = parent.position + (ThisTransform.localPosition * -1);
+            mirror.position = parent.position + (Player.localPosition * -1);
         }
         #endif
     }

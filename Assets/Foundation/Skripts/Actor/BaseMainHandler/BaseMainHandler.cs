@@ -9,7 +9,7 @@ namespace Scaramouche.Game {
         public Transform CharacterTransform { get { return characterTransform; } }
 
         public BaseMainHandler(Actor _actor) {
-            characterTransform = _actor.ThisTransform;
+            characterTransform = _actor.Player;
             UpdateManager.AddTo(this);
         }
     }

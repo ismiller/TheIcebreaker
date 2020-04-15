@@ -29,5 +29,24 @@ namespace Scaramouche.Game {
         public Avatar PlayerAvatar { get { return playerAvatar; } }
         public bool AplayRootMotion { get { return aplayRootMotion; } }
         public AnimatorCullingMode CullingMode { get { return cullingMode; } }
+
+        public Animator AddAnimator(CharacterActor _actor) {
+            var tempAnimator = _actor.Player.GetChild(0).transform.gameObject.AddComponent<Animator>();
+            tempAnimator.runtimeAnimatorController = _actor.ParametrsComponent.AnimatorController;
+            tempAnimator.avatar = _actor.ParametrsComponent.PlayerAvatar;
+            tempAnimator.applyRootMotion = _actor.ParametrsComponent.AplayRootMotion;
+            tempAnimator.cullingMode = _actor.ParametrsComponent.CullingMode;
+            return tempAnimator;
+        }
+
+        public CharacterController AddCharacterController(CharacterActor _actor) {
+            var tempCHController = _actor.Player.gameObject.AddComponent<CharacterController>();
+            tempCHController.slopeLimit = _actor.ParametrsComponent.SlopeLimit;
+            tempCHController.stepOffset = _actor.ParametrsComponent.StepOffset;
+            tempCHController.skinWidth = _actor.ParametrsComponent.SkinWidth;
+            tempCHController.radius = _actor.ParametrsComponent.Radius;
+            tempCHController.height = _actor.ParametrsComponent.Height;
+            return tempCHController;
+        }
     }
 }

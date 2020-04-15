@@ -8,7 +8,7 @@ namespace Scaramouche.Game {
         [SerializeField] private BezierCurves bezierCurvesSliding;
 
         private void Start() {
-            ThisTransform = transform.GetComponent<Transform>();
+
         }
 
         public Vector3[] GetSlidingPath() {

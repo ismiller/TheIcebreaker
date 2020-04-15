@@ -8,27 +8,59 @@ namespace Scaramouche.Game {
 
         [SerializeField] private CharacterActorParametrs parametrsComponent;
         [SerializeField] private PlayerMotionComponent motionComponent;
-
-        public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
-
+        //------------
         private CharacterController playerCharacterController;
         private Animator playerAnimator;
-        private List<ITriggerHandler> triggerHandlers;
-        private CameraActor cameraActor;
-        //-----------
-        public CharacterController PlayerCharacterController { get {return playerCharacterController; } }
-        public Animator PlayerAnimator { get { return playerAnimator; } }
+        private bool isFirstStart = true;
+        private bool isToolboxActive => Toolbox.isApplicationQuitting;
+        //------------
+        private List<ITriggerHandler> triggerHandlers = new List<ITriggerHandler>();
+        //------------
+        public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
+        public CharacterActorParametrs ParametrsComponent { get { return parametrsComponent; } }
+
+        public CharacterController PlayerCharacterController { 
+            get {
+                if (!playerCharacterController) { 
+                    playerCharacterController = parametrsComponent.AddCharacterController(this); 
+                }
+                return playerCharacterController; 
+            } 
+        }
+
+        public Animator PlayerAnimator { 
+            get { 
+                if (!playerAnimator) { 
+                    playerAnimator = parametrsComponent.AddAnimator(this); 
+                }
+                return playerAnimator; 
+            } 
+        }
+
+        private ITask FindCameraTask {
+            get { return Task.CreateTask(SetPlayerInCamera()); }
+        }
 
         private void Start() {
-            ThisTransform = transform.GetComponent<Transform>();
-            cameraActor = GameObject.FindObjectOfType<CameraActor>().GetComponent<CameraActor>();
-            triggerHandlers = new List<ITriggerHandler>();
-            AddCharacterController();
-            AddAnimator();
-            Task.CreateTask(SetPlayerInCamera()).Start();
+            FindCameraTask.Start();      
             ComponentInitialize(motionComponent);
-            AddHandlerInList(motionComponent);
+            AddInTriggerHandles(motionComponent);
             UpdateManager.AddTo(this);
+            isFirstStart = false;
+        }
+
+        private void OnEnable() {
+            if (!isFirstStart) {
+                ComponentInitialize(motionComponent);
+                AddInTriggerHandles(motionComponent);
+                UpdateManager.AddTo(this);  
+            }
+        }
+
+        private void OnDisable() {
+            triggerHandlers.Clear();
+            ClearUpdateLists();
+            if(!isToolboxActive) UpdateManager.RemoveFrom(this);
         }
 
         private void ComponentInitialize(ControlComponent[] _components) {
@@ -38,43 +70,29 @@ namespace Scaramouche.Game {
         }
 
         private void ComponentInitialize(ControlComponent _component) {
-            _component.Initialize(ThisTransform);
+            _component.Initialize(Player);
             this.AddTo(_component.GetMainHandler());
         }
 
-        private void AddHandlerInList(ControlComponent[] _components) {
+        private void AddInTriggerHandles(ControlComponent[] _components) {
             foreach(var component in _components) {
-                AddHandlerInList(component);
+                AddInTriggerHandles(component);
             }
         }
 
-        private void AddHandlerInList(ControlComponent _component) {
-            BaseMainHandler handler = _component.GetMainHandler();
-            if (handler is ITriggerHandler) { 
-                triggerHandlers.Add(handler as ITriggerHandler);
+        private void AddInTriggerHandles(ControlComponent _component) {
+            if (_component.GetMainHandler() is ITriggerHandler) { 
+                triggerHandlers.Add(_component.GetMainHandler() as ITriggerHandler);
             }
-        }
-
-        private void AddCharacterController() {
-            playerCharacterController = ThisTransform.gameObject.AddComponent<CharacterController>();
-            playerCharacterController.slopeLimit = parametrsComponent.SlopeLimit;
-            playerCharacterController.stepOffset = parametrsComponent.StepOffset;
-            playerCharacterController.skinWidth = parametrsComponent.SkinWidth;
-            playerCharacterController.radius = parametrsComponent.Radius;
-            playerCharacterController.height = parametrsComponent.Height;
-        }
-
-        private void AddAnimator() {
-            playerAnimator = ThisTransform.GetChild(0).transform.gameObject.AddComponent<Animator>();
-            playerAnimator.runtimeAnimatorController = parametrsComponent.AnimatorController;
-            playerAnimator.avatar = parametrsComponent.PlayerAvatar;
-            playerAnimator.applyRootMotion = parametrsComponent.AplayRootMotion;
-            playerAnimator.cullingMode = parametrsComponent.CullingMode;
         }
 
         private IEnumerator SetPlayerInCamera() {
-            yield return new WaitForEndOfFrame();
-            cameraActor.SetPlayer(ThisTransform);
+            CameraActor tempCamera = null;
+            while (!tempCamera) {
+                tempCamera = GameObject.FindObjectOfType<CameraActor>().GetComponent<CameraActor>();
+                yield return new WaitForEndOfFrame();
+            }
+            tempCamera.SetPlayer(Player);
         }
     }
 }

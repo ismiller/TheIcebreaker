@@ -16,7 +16,7 @@ namespace Scaramouche.Game {
         
         public void OnAwake() {
             if(!host) {
-                host = GameObject.Find("[SETUP]").GetComponent<MonoHostComponent>();
+                host = GameObject.Find("[TOOLBOX]").GetComponent<MonoHostComponent>();
             }
         }
 

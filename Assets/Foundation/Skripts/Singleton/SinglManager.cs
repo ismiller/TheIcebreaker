@@ -4,18 +4,26 @@ namespace Scaramouche.Game {
     public class SinglManager<T> : MonoBehaviour where T : MonoBehaviour {  
 
         private static  T instance;
-        
+        private static System.Object locked = new System.Object();
+        public static bool isApplicationQuitting = false;
+
         public static T Instance {
             get {
-                if (!instance) {
-                    instance = FindObjectOfType<T>();
+                lock (locked) {
                     if (!instance) {
-                        var singlton = new GameObject("[TOOLBOX]");
-                        instance = singlton.AddComponent<T>();
+                        instance = FindObjectOfType<T>();
+                        if (!instance) {
+                            var singlton = new GameObject("[TOOLBOX]");
+                            instance = singlton.AddComponent<T>();
+                        }
                     }
+                    return instance;
                 }
-                return instance;
             }
+        }
+
+        public virtual void OnDestroy() {
+            isApplicationQuitting = true;
         }
     }
 }

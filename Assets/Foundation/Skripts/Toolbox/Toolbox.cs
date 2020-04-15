@@ -30,5 +30,9 @@ namespace Scaramouche.Game {
                 (obj as IAwake).OnAwake();
             } else return;
         }
+
+        public override void OnDestroy() {
+            base.OnDestroy();
+        }
     }
 }

@@ -59,7 +59,7 @@ namespace Scaramouche.Game {
         }
 
         public void OnAwake() {
-            GameObject.Find("[SETUP]").AddComponent<MonoHostComponent>().Setup(this);
+            GameObject.Find("[TOOLBOX]").AddComponent<MonoHostComponent>().Setup(this);
         }
         
     }

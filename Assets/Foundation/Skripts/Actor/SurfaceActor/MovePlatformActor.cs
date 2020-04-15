@@ -19,9 +19,8 @@ namespace Scaramouche.Game {
         Move move;
 
         private void Start() {
-            ThisTransform = GetComponent<Transform>();
             if (isStartPoint) DoorOpen(false);
-            downPosition = topPosition = ThisTransform.position;
+            downPosition = topPosition = Player.position;
             downPosition.y = downPoint.position.y;
             topPosition.y = topPoint.position.y;
             move = MoveAxisY;
@@ -59,8 +58,8 @@ namespace Scaramouche.Game {
         }
 
         private bool MoveAxisY() {
-            ThisTransform.position = Vector3.MoveTowards(ThisTransform.position, topPosition, 3 * Time.fixedDeltaTime);
-            if (ThisTransform.position.y != topPosition.y) return false;
+            Player.position = Vector3.MoveTowards(Player.position, topPosition, 3 * Time.fixedDeltaTime);
+            if (Player.position.y != topPosition.y) return false;
             else return true;            
         }
     }

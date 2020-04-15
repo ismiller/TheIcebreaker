@@ -11,7 +11,7 @@ namespace Scaramouche.Game {
 
         private void OnDrawGizmos() {
             Gizmos.color = color;
-            Gizmos.DrawCube(ThisTransform.position, Vector3.one * scale);
+            Gizmos.DrawCube(Player.position, Vector3.one * scale);
         }
     }
 }
