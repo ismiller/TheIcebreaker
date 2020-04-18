@@ -33,8 +33,10 @@ namespace Scaramouche.Game {
 
         public void Stop() {
             if(isProcessing) {
-                host.StopCoroutine(coroutine);
-                coroutine = null;
+                if (!MonoHostComponent.isApplicationQuitting) {
+                    host.StopCoroutine(coroutine);
+                    coroutine = null;
+                }
             }
         }
 

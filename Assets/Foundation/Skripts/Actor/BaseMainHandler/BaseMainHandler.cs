@@ -8,9 +8,15 @@ namespace Scaramouche.Game {
         protected Transform characterTransform;
         public Transform CharacterTransform { get { return characterTransform; } }
 
-        public BaseMainHandler(Actor _actor) {
-            characterTransform = _actor.Player;
-            UpdateManager.AddTo(this);
+        public BaseMainHandler() {
+
         }
+
+        public virtual void Initialize(Actor _actor){
+            characterTransform = _actor.Player;
+        }
+
+        public abstract void StartHandle();
+        public abstract void StopHandle();
     }
 }

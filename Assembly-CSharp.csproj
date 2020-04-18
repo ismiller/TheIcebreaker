@@ -9,7 +9,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{556E0A14-0EC2-1CA4-68E3-DDE098C47CAC}</ProjectGuid>
+    <ProjectGuid>{E7C46947-9C5E-70F9-6829-DFCC4FD7C935}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -50,9 +50,10 @@
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\CameraActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraMotionComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraMotionHandler.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraParametr.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\ActorParametrs\CharacterActorParametrs.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\ActorParametrs\NullableHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\CharacterActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MediatorCharacterHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\Data\InputDataForState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\MotionStateMachine.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\PlayerMotionComponent.cs" />
@@ -60,8 +61,11 @@
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\BaseMovementState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\DashState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\JumpObstacleState.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\MoveStateBox.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\SlidingSlopeState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\ValkState.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\RayCastHandler\RayCastComponent.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\RayCastHandler\RayCastHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\ControlComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\GeneralScripts\CharacterMotor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\DefoltSurfaceActor.cs" />
@@ -79,6 +83,7 @@
      <Compile Include="Assets\Foundation\Skripts\Interface\IAcceptVisitorRayCast.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IAcceptVisitorTrigger.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IAwake.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\IMediator.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IMovement.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IStateLoad.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\ITask.cs" />
@@ -154,61 +159,61 @@
      <None Include="Assets\TextMesh Pro\Resources\Shaders\TMP_Sprite.shader" />
      <None Include="Assets\TextMesh Pro\Examples &amp; Extras\Fonts\Bangers - OFL.txt" />
  <Reference Include="Unity.Timeline.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Cinemachine">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
  </Reference>
  <Reference Include="Unity.ProGrids">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.ProGrids.dll</HintPath>
  </Reference>
  <Reference Include="Unity.VSCode.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.ProBuilder">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.ProBuilder.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.ProBuilder.dll</HintPath>
  </Reference>
  <Reference Include="Unity.InputSystem">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.InputSystem.dll</HintPath>
  </Reference>
  <Reference Include="Unity.ProBuilder.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.ProBuilder.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.ProBuilder.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.ProBuilder.AssetIdRemapUtility">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.ProBuilder.AssetIdRemapUtility.dll</HintPath>
  </Reference>
  <Reference Include="Unity.ProGrids.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.ProGrids.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine.UI">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
  </Reference>
  <Reference Include="Unity.CollabProxy.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Rider.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
  </Reference>
  <Reference Include="com.unity.cinemachine.editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.ProBuilder.AddOns.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.ProBuilder.AddOns.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.UI.Builder.Editor">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.UI.Builder.Editor.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.UI.Builder.Editor.dll</HintPath>
  </Reference>
  <Reference Include="Unity.TextMeshPro">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.UI">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>
@@ -394,7 +399,7 @@
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
  </Reference>
  <Reference Include="Newtonsoft.Json">
- <HintPath>D:/Unity_Ptoject/TestNewSystemManager/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Assets/JsonDotNet/Assemblies/Standalone/Newtonsoft.Json.dll</HintPath>
  </Reference>
  <Reference Include="mscorlib">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/MonoBleedingEdge/lib/mono/4.7.1-api/mscorlib.dll</HintPath>

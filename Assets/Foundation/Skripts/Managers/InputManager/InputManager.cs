@@ -23,8 +23,7 @@ namespace Scaramouche.Game {
         public static event GetInputValue<bool> GetKeyBendDown;
         public static event GetInputValue<bool> GetKeyDash;
         public static event GetInputValue<bool> GetKeyInteract;
-        public static event GetInputValue<float> GetKeyRotate;
-        
+        public static event GetInputValue<float> GetKeyRotate;        
 
         public void OnAwake () {
             _inputController = new InputContoller();

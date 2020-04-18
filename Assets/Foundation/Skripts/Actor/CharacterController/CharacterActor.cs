@@ -6,35 +6,31 @@ using System;
 namespace Scaramouche.Game {
     public class CharacterActor : Actor {
 
+        [Header("Player Settings")]
         [SerializeField] private CharacterActorParametrs parametrsComponent;
+        [Header("Motion Component")]
         [SerializeField] private PlayerMotionComponent motionComponent;
+        [Header("Ray Cast Component")] 
+        [SerializeField] private RayCastComponent rayCastComponent;
+ 
+        private MediatorCharacterHandler mediatorHandler;
         //------------
-        private CharacterController playerCharacterController;
+        private CharacterController playerCHController;
         private Animator playerAnimator;
         private bool isFirstStart = true;
-        private bool isToolboxActive => Toolbox.isApplicationQuitting;
         //------------
         private List<ITriggerHandler> triggerHandlers = new List<ITriggerHandler>();
         //------------
         public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
         public CharacterActorParametrs ParametrsComponent { get { return parametrsComponent; } }
+        public MediatorCharacterHandler MediatorHandler { get { return mediatorHandler; } }
 
-        public CharacterController PlayerCharacterController { 
-            get {
-                if (!playerCharacterController) { 
-                    playerCharacterController = parametrsComponent.AddCharacterController(this); 
-                }
-                return playerCharacterController; 
-            } 
+        public CharacterController PlayerCHController { 
+            get { return playerCHController ?? (playerCHController = parametrsComponent.AddCharacterController(this)); } 
         }
 
         public Animator PlayerAnimator { 
-            get { 
-                if (!playerAnimator) { 
-                    playerAnimator = parametrsComponent.AddAnimator(this); 
-                }
-                return playerAnimator; 
-            } 
+            get { return playerAnimator ?? (playerAnimator = parametrsComponent.AddAnimator(this)); } 
         }
 
         private ITask FindCameraTask {
@@ -43,46 +39,35 @@ namespace Scaramouche.Game {
 
         private void Start() {
             FindCameraTask.Start();      
-            ComponentInitialize(motionComponent);
-            AddInTriggerHandles(motionComponent);
+            HandlerInitialize(
+                motionComponent.GetHandler(this), 
+                rayCastComponent.GetHandler(this));
+            AddInTriggerHandles(mainHandlers);
             UpdateManager.AddTo(this);
             isFirstStart = false;
+            mediatorHandler = new MediatorCharacterHandler(mainHandlers);
         }
 
-        private void OnEnable() {
+        protected override void OnEnable() {
             if (!isFirstStart) {
-                ComponentInitialize(motionComponent);
-                AddInTriggerHandles(motionComponent);
-                UpdateManager.AddTo(this);  
+                AddInTriggerHandles(mainHandlers);
+                base.OnEnable();
+                UpdateManager.AddTo(this);
             }
         }
 
-        private void OnDisable() {
+        protected override void OnDisable() {
             triggerHandlers.Clear();
-            ClearUpdateLists();
-            if(!isToolboxActive) UpdateManager.RemoveFrom(this);
+            base.OnDisable();
+            if (!Toolbox.isApplicationQuitting) 
+                UpdateManager.RemoveFrom(this);
         }
 
-        private void ComponentInitialize(ControlComponent[] _components) {
-            foreach (var component in _components) {
-                ComponentInitialize(component);
-            }
-        }
-
-        private void ComponentInitialize(ControlComponent _component) {
-            _component.Initialize(Player);
-            this.AddTo(_component.GetMainHandler());
-        }
-
-        private void AddInTriggerHandles(ControlComponent[] _components) {
-            foreach(var component in _components) {
-                AddInTriggerHandles(component);
-            }
-        }
-
-        private void AddInTriggerHandles(ControlComponent _component) {
-            if (_component.GetMainHandler() is ITriggerHandler) { 
-                triggerHandlers.Add(_component.GetMainHandler() as ITriggerHandler);
+        private void AddInTriggerHandles(List<BaseMainHandler> _handlers) {
+            foreach (var handler in _handlers) {
+                if (handler is ITriggerHandler) { 
+                    triggerHandlers.Add(handler as ITriggerHandler);
+                }
             }
         }
 

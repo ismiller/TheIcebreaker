@@ -6,13 +6,11 @@ namespace Scaramouche.Game {
     public class DashState : BaseMovementState, IMovement {
         
         private ITask dashTask;
-        private IMovement lastState;
-
         private bool startDash;
         private bool stopDash;
 
-        public DashState(PlayerMotionHandler _motionHandler, IMovement _lastState) : base(_motionHandler) {
-            lastState = _lastState;
+        public DashState(PlayerMotionHandler _motionHandler) : base(_motionHandler) {
+        
         }
 
         public void Enter() {
@@ -26,7 +24,7 @@ namespace Scaramouche.Game {
         }
 
         public void LogicUpdate() {
-            if (stopDash) { motionStateMachine.ChangeMovementState(lastState); }
+            if (stopDash) { motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState); }
         }
 
         public void PhisicUpdate() {

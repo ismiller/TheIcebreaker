@@ -4,9 +4,8 @@ using UnityEngine;
 
 namespace Scaramouche.Game {    
     [CreateAssetMenu(fileName = "Test Motion Handler", menuName = "Player Component/Test Motion Handler")]
-    public class PlayerMotionComponent : ControlComponent {
-        [SerializeField] private bool groundRayCast;
-        [SerializeField] private bool sphereRayCast;
+    public class PlayerMotionComponent : ControlComponent<PlayerMotionHandler> {
+
         [Header("Rotate Parametrs")]
         [SerializeField] [Range(0, 20)] private float rotateSpeed;
         [Header("Gravity Parametrs")]
@@ -32,9 +31,6 @@ namespace Scaramouche.Game {
         [SerializeField] [Range(0, 30)] private float speedIfEndSlope; 
         [SerializeField] [Range(0, 10)] private float distanceStartSliding;
         //-------------
-        public bool GroundRayCast { get { return groundRayCast; } }
-        public bool SphererayCast { get { return sphereRayCast; } }
-        //-------------
         public float RotateSpeed { get { return rotateSpeed; } }
         //-------------
         public float GravitySpeed { get { return gravitySpeed; } }
@@ -58,17 +54,5 @@ namespace Scaramouche.Game {
         public float SpeedIfBeginSlope { get { return speedIfBeginSlope; } }
         public float SpeedIfEndSlope { get { return speedIfEndSlope; } }
         public float StartSlidingDist { get { return distanceStartSliding; } }
-        //-------------
-
-        private PlayerMotionHandler mainHandler;
-        public PlayerMotionHandler MainHandler { get { return mainHandler; } }
-
-        public override void Initialize(Transform _player) {
-            mainHandler = new PlayerMotionHandler(_player.GetComponent<CharacterActor>());
-        }
-
-        public override BaseMainHandler GetMainHandler() {
-            return MainHandler;
-        }
     }
 }

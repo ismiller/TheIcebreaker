@@ -6,9 +6,9 @@ namespace Scaramouche.Game {
     public class CharacterMotor {
         
         private PlayerMotionHandler motionHandler;
-        private PlayerMotionComponent motionComponent;
-        private CharacterController characterController;
-        private Transform player;
+        private PlayerMotionComponent motionComponent => motionHandler.GetCharacterActor.MotionComponent;
+        private CharacterController chController => motionHandler.GetCharacterActor.PlayerCHController;
+        private Transform player => motionHandler.GetCharacterActor.Player;
         //------------
         private Vector3 moveDirection;
         private Vector2 currenDirection;
@@ -18,9 +18,6 @@ namespace Scaramouche.Game {
 
         public CharacterMotor(PlayerMotionHandler _motionHandler) {
             motionHandler = _motionHandler;
-            motionComponent = motionHandler.MotionComponent;
-            player = motionHandler.CharacterTransform;
-            characterController = player.GetComponent<CharacterController>();
             currentSpeed = ComputeSpeedDependDirection(moveDirection);
         }
 
@@ -80,15 +77,15 @@ namespace Scaramouche.Game {
 
         public Vector3 SearchStartPointInArray(out int _numberPoint) {
             _numberPoint = 0;
-            var currentPoint = motionHandler.PatchTemp[0];
-            for (var i = 0; i < motionHandler.PatchTemp.Length - 1; i++) {
-                var nextPoint = motionHandler.PatchTemp[i + 1];
+            var currentPoint = motionHandler.GetPatchTemp[0];
+            for (var i = 0; i < motionHandler.GetPatchTemp.Length - 1; i++) {
+                var nextPoint = motionHandler.GetPatchTemp[i + 1];
                 if (Vector3.Distance(player.position, nextPoint) < Vector3.Distance(player.position, currentPoint)) {
                     currentPoint = nextPoint;
                     _numberPoint = i + 1;
                 }
             }
-            return motionHandler.PatchTemp[_numberPoint];
+            return motionHandler.GetPatchTemp[_numberPoint];
         }
 
         public Vector2 ComputeDirectionDependPoint(Vector3 _point) {
@@ -121,7 +118,7 @@ namespace Scaramouche.Game {
         }
 
         public Vector3 ApplyGravity(Vector3 _direction) {
-            if(!motionHandler.IsGraund) { _direction.y = -motionComponent.GravitySpeed * 2.5f * Time.deltaTime;             
+            if(!chController.isGrounded) { _direction.y = -motionComponent.GravitySpeed * 2.5f * Time.deltaTime;             
             } else {  _direction.y = -1.0f; }
             return _direction;
         }
@@ -129,7 +126,7 @@ namespace Scaramouche.Game {
         private void Move(Vector3 _direction, float _speed, bool _isGravity) {
             _direction = ComputeDirectionDependSpeed(_direction, _speed);
             if (_isGravity) { _direction = ApplyGravity(_direction); }
-            characterController.Move(Vector3.ClampMagnitude(_direction, _speed));
+            chController.Move(Vector3.ClampMagnitude(_direction, _speed));
         }
     }
 }

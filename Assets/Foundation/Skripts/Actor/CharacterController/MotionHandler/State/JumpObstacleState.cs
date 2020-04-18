@@ -5,28 +5,27 @@ using UnityEngine;
 namespace Scaramouche.Game {
     public class JumpObstacleState : BaseMovementState, IMovement {
 
-        private CharacterController controller;
         private ITask jumpTask;
         private bool startJump;
         private bool stopJump;
 
-        public JumpObstacleState(PlayerMotionHandler _motionHandler) : base(motionHandler) {
-            controller = _motionHandler.CharacterTransform.GetComponent<CharacterController>();
+        public JumpObstacleState(PlayerMotionHandler _motionHandler) : base(_motionHandler) {
+
         }
 
         public void Enter() {
-            rotateDirection = (motionHandler.ObstaclePoint - player.position).normalized;
+            rotateDirection = (motionHandler.GetObstaclePoint - player.position).normalized;
             direction = new Vector2(rotateDirection.x, rotateDirection.z);
             jumpTask = Task.CreateTask(Jump());
             startJump = stopJump = false;
-            controller.height = 1;
-            controller.center = new Vector3(0, 0.7f, 0);
+            chController.height = 1;
+            chController.center = new Vector3(0, 0.7f, 0);
             playerAnimator.SetTrigger("JumpObstacle");
         }
 
         public void LogicUpdate() {
             if (stopJump) { 
-                motionStateMachine.ChangeMovementState(motionHandler.valkState); 
+                motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState); 
             }
         }
 
@@ -40,13 +39,13 @@ namespace Scaramouche.Game {
 
         public void Exit() {
             jumpTask = null;
-            controller.height = 2;
-            controller.center = new Vector3(0, 0, 0);
+            chController.height = 2;
+            chController.center = new Vector3(0, 0, 0);
         }
 
         private IEnumerator Jump() {
             while(!stopJump) {
-                yield return null;
+                yield return new WaitForEndOfFrame();
                 if (!characterMotor.JumpObstacle(direction)) {
                     stopJump = true;
                 }

@@ -3,9 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public abstract class ControlComponent : ScriptableObject {
+    public abstract class ControlComponent<T> : ScriptableObject where T : BaseMainHandler, new() {
+        
+        private T handler;
 
-        public abstract void Initialize(Transform _player);
-        public abstract BaseMainHandler GetMainHandler();
+        public T GetHandler(Actor _actor) { 
+            if (handler == null) {
+                handler = new T();
+                handler.Initialize(_actor);
+            }
+            return handler;
+
+        }
     }
 }

@@ -5,12 +5,10 @@ using UnityEngine;
 namespace Scaramouche.Game {
     public class ValkState : BaseMovementState, IMovement {
 
-        private DashState dashState;
         private int slidingPoint;
         private float currentSpeed;
 
         public ValkState(PlayerMotionHandler _motionHandler) : base(_motionHandler) {
-            dashState = new DashState(motionHandler, this);
             InputManager.GetVectorMove += (_value) => direction = _value;
             dashPossible = true;
         }
@@ -22,7 +20,7 @@ namespace Scaramouche.Game {
         }
 
         public void LogicUpdate() {
-            if (motionHandler.IsSlope) { motionStateMachine.ChangeMovementState(motionHandler.slidingSlopeState); }
+            if (motionHandler.IsSlope) { motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetSlidingSlopeState); }
         }
 
         public void PhisicUpdate() {
@@ -37,13 +35,19 @@ namespace Scaramouche.Game {
 
         private void SetInDash(bool _value) {
             if (motionHandler.IsObstacle) {
-                motionStateMachine.ChangeMovementState(motionHandler.jumpObstacleState);
+                motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetJumpObstacleState);
             } else {
                 if ((direction != Vector2.zero) && dashPossible) {
-                    motionStateMachine.ChangeMovementState(dashState.Start(direction));
+                    motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetDashState.Start(direction));
                     Task.CreateTask(DashReturn()).Start();
                 }
             }
+        }
+
+        private IEnumerator DashReturn() {
+            dashPossible = false;
+            yield return new WaitForSeconds(motionComponent.ReturnTimeDash);
+            dashPossible = true;
         }
     }
 }

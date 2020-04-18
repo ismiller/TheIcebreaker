@@ -3,132 +3,103 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public class PlayerMotionHandler : BaseMainHandler, IVisitorEnvironment, IUpdateActor, ILateUpdateActor {
+    public class PlayerMotionHandler : BaseMainHandler, IVisitorEnvironment, IUpdateHandler, ILateUpdateHandler, IMessageRecipients {
         
-        private PlayerMotionComponent motionComponent;
-        //------------
-        private CharacterController characterController;
-        private MotionStateMachine movementStateMachine;
+        private CharacterActor characterActor;
         private CharacterMotor characterMotor;
-        private Animator playerAnimator;
-        //------------
-        public readonly SlidingSlopeState slidingSlopeState;
-        public readonly JumpObstacleState jumpObstacleState;
-        public readonly ValkState valkState;
-        //------------
+        private MoveStateBox moveStateBox;
+        private MotionStateMachine motionStateMachine;
+        private ITask taskGraundCast, taskForvardCast; 
+        private ITask taskSlidingPosition => Task.CreateTask(CalculateSlidingPosition());
         private Vector3[] patchTemp;
         private Vector3 obstaclePoint;
-        private bool isObstacle;
-        private bool isSlope;
-        private bool isBeginSlope;
-        private bool isSlippery;
-        private bool isPlatform;
-        //------------
-        public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
-        //------------
-        public MotionStateMachine MovementStateMachine { get { return movementStateMachine; } }
-        public CharacterMotor CharacterMotor { get { return characterMotor; } }
-        public Animator PlayerAnimator { get { return playerAnimator; } }
-        //------------
-        public Vector3[] PatchTemp { get { return patchTemp; } }
-        public Vector3 ObstaclePoint { get { return obstaclePoint; } }
-        
-        public bool IsGraund { get { return characterController.isGrounded; } }
-        public bool IsObstacle { get { return isObstacle; } }
-        public bool IsSlope { get { return isSlope; } }
-        public bool IsBeginSlope { get { return isBeginSlope; } }
-        public bool IsSlippery { get { return isSlippery; } }
-        public bool IsPlatform { get { return isPlatform; } }
-        //-------------
+        private SurfaceType surfaceTemp;
+        private float distanceStartSliding => characterActor.MotionComponent.StartSlidingDist;
         private bool isDefoltGround => (surfaceTemp == SurfaceType.Defolt) ? true : false;
-        //-------------
-        private SurfaceType surfaceTemp = SurfaceType.Defolt;
+
+        //------------
+        public CharacterActor GetCharacterActor {
+            get { return characterActor; }
+        }
+
+        public MoveStateBox GetMoveStateBox {
+            get { return moveStateBox ?? (moveStateBox = new MoveStateBox(this)); }
+        }
+
+        public MotionStateMachine GetMotionStateMachine { 
+            get { return motionStateMachine ?? (motionStateMachine = MotionStateMachine.Initialize(GetMoveStateBox.GetValkState)); } 
+        }
+
+        public CharacterMotor GetCharacterMotor { 
+            get { return characterMotor ?? (characterMotor = new CharacterMotor(this)); } 
+        }
+
+        public Vector3[] GetPatchTemp { get { return patchTemp; } }
+
+        public Vector3 GetObstaclePoint { get { return obstaclePoint; } }
+
+        public bool IsObstacle { get; private set; }
+        public bool IsSlope { get; private set; }
+        public bool IsBeginSlope { get; private set; }
+        public bool IsPlatform { get; private set; }
+
         private enum SurfaceType {
             Defolt, Slope, MovePlatform, None
         }
 
-        public PlayerMotionHandler(CharacterActor _characterActor) : base (_characterActor) {
-            motionComponent = _characterActor.MotionComponent;
-            characterController = _characterActor.PlayerCharacterController;
-            movementStateMachine = new MotionStateMachine();
-            characterMotor = new CharacterMotor(this);
-            playerAnimator = _characterActor.PlayerAnimator;
-            //------------
-            slidingSlopeState = new SlidingSlopeState(this);
-            jumpObstacleState = new JumpObstacleState(this);
-            valkState = new ValkState(this);
-            //------------
-            movementStateMachine.Initialize(valkState);
-            //------------
-            Task.CreateTask(GraundRayCast()).Start();
-            Task.CreateTask(ForvardRayCast()).Start();
+        public PlayerMotionHandler() : base() {
+
         }
 
-        public void UpdateActor() {
-            movementStateMachine.currentState.PhisicUpdate();
+        public override void Initialize(Actor _actor) {
+            base.Initialize(_actor);
+            characterActor = (CharacterActor)_actor;
         }
 
-        public void LateUpdateActor() {
-            movementStateMachine.currentState.LogicUpdate();
+        public override void StartHandle() {
+
         }
 
-        private IEnumerator GraundRayCast() {
-            while (true) {
-                if (motionComponent.GroundRayCast) {
-                    Ray downRay = new Ray(CharacterTransform.position, Vector3.down);
-                    if (Physics.Raycast(downRay, out RaycastHit hit, 1.3f)) {
-                        yield return new WaitForEndOfFrame();
-                        if (hit.transform.TryGetComponent<IAcceptVisitorRayCast>(out IAcceptVisitorRayCast _actor)) {
-                            _actor.AcceptDownCast(this);
-                            yield return new WaitForEndOfFrame();
-                        }
-                    }
-                    yield return new WaitForEndOfFrame();
-                }
-            }
+        public override void StopHandle() {
+            taskSlidingPosition.Stop();
         }
 
-        private IEnumerator ForvardRayCast() {
-            while (true) {
-                Vector3 startPosition = new Vector3(CharacterTransform.position.x, CharacterTransform.position.y - 0.5f, CharacterTransform.position.z);
-                Ray forwardRay = new Ray(startPosition, CharacterTransform.forward);
-                if (Physics.Raycast(forwardRay, out RaycastHit hit, 1.3f)) {
-                    yield return new WaitForEndOfFrame();
-                    if (hit.transform.TryGetComponent<IAcceptVisitorRayCast>(out IAcceptVisitorRayCast _actor)) {
-                        obstaclePoint = hit.collider.ClosestPoint(CharacterTransform.position);
-                        yield return new WaitForEndOfFrame();
-                        if (Vector3.Distance(CharacterTransform.position, obstaclePoint) < 0.8f) {
-                            _actor.AcceptForwardCast(this);
-                        }
-                    }
-                } else { isObstacle = false; }
-                yield return new WaitForEndOfFrame();
-            }
+        public void Notify<T>(T _actor) {
+            if (_actor is IAcceptVisitorRayCast) CallAccept(_actor as IAcceptVisitorRayCast);
+        }
+
+        private void CallAccept(IAcceptVisitorRayCast _actor) {
+            _actor.AcceptDownCast(this);
+            _actor.AcceptForwardCast(this);
+        }
+
+        public void UpdateHandler() {
+            GetMotionStateMachine.currentState.PhisicUpdate();
+        }
+
+        public void LateUpdateHandler() {
+            GetMotionStateMachine.currentState.LogicUpdate();
         }
 
         private IEnumerator CalculateSlidingPosition() {
-            int endElement  = PatchTemp.Length - 1;
             float distanceEnd; float distanceStart;
-            distanceStart = Vector3.Distance(CharacterTransform.position, PatchTemp[0]);
-            yield return new WaitForEndOfFrame();
-            while ((patchTemp != null) && !isSlope) {
-                distanceEnd = Vector3.Distance(CharacterTransform.position, PatchTemp[endElement]);
-                yield return new WaitForEndOfFrame();
+            distanceStart = Vector3.Distance(CharacterTransform.position, patchTemp[0]);
+            while ((patchTemp != null) && !IsSlope) {
+                distanceEnd = Vector3.Distance(CharacterTransform.position, patchTemp[patchTemp.Length - 1]);
                 if (distanceStart < distanceEnd) {
-                    isSlope = true; 
-                    isBeginSlope = true;
+                    IsSlope = IsBeginSlope = true;
                 } else if (distanceEnd < distanceStart) {
-                    if(distanceEnd > motionComponent.StartSlidingDist) {
-                        isSlope = true;
-                        isBeginSlope = false;
+                    if(distanceEnd > distanceStartSliding) {
+                        IsSlope = true;
+                        IsBeginSlope = false;
                     }
                 }
-                yield return new WaitForEndOfFrame();
+                yield return new WaitForSeconds(Time.deltaTime);
             }
         }
 
         public void Visit(ObstacleActor _actor) {   
-            isObstacle = true;
+            IsObstacle = true;
         }
 
         public void Visit(SlopeSurfaceActor _actor) {
@@ -138,7 +109,7 @@ namespace Scaramouche.Game {
                 for (var i = 0; i < patchTemp.Length; i++) {
                     patchTemp[i] = _actor.GetSlidingPath()[i];
                 }
-                Task.CreateTask(CalculateSlidingPosition()).Start();
+                taskSlidingPosition.Start();
             }
         }
 
@@ -146,7 +117,7 @@ namespace Scaramouche.Game {
             if (!isDefoltGround) {
                 CharacterTransform.SetParent(null);
                 surfaceTemp = SurfaceType.Defolt;
-                isSlope = isSlippery = isPlatform = false;
+                IsSlope = IsPlatform = false;
                 patchTemp = null;
             }
         }
@@ -155,9 +126,10 @@ namespace Scaramouche.Game {
             if (isDefoltGround) {
                 CharacterTransform.SetParent(_actor.Player);
                 surfaceTemp = SurfaceType.MovePlatform; 
-                isPlatform = true; 
+                IsPlatform = true; 
                 _actor.StartMove();
             }   
         }
+        
     }
 }

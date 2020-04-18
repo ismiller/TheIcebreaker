@@ -5,13 +5,14 @@ using UnityEngine;
 namespace Scaramouche.Game {
     public abstract class BaseMovementState {
 
-        protected static PlayerMotionComponent motionComponent;
-        protected static PlayerMotionHandler motionHandler;
-        protected static CharacterMotor characterMotor;
-        protected static Animator playerAnimator;
-        protected static Transform player;
+        protected PlayerMotionHandler motionHandler;
+        protected Transform player => motionHandler.GetCharacterActor.Player;
+        protected CharacterMotor characterMotor => motionHandler.GetCharacterMotor;
+        protected Animator playerAnimator => motionHandler.GetCharacterActor.PlayerAnimator;
+        protected MotionStateMachine motionStateMachine => motionHandler.GetMotionStateMachine;
+        protected CharacterController chController => motionHandler.GetCharacterActor.PlayerCHController;
+        protected PlayerMotionComponent motionComponent => motionHandler.GetCharacterActor.MotionComponent;
 
-        protected MotionStateMachine motionStateMachine;
         protected Vector2 direction;
         protected Vector3 rotateDirection;
         protected bool dashPossible;
@@ -19,18 +20,6 @@ namespace Scaramouche.Game {
 
         protected BaseMovementState(PlayerMotionHandler _motionHandler) {
             motionHandler = _motionHandler;
-            characterMotor = _motionHandler.CharacterMotor;
-            motionComponent = _motionHandler.MotionComponent;
-            motionStateMachine = _motionHandler.MovementStateMachine;
-            player = _motionHandler.CharacterTransform;
-            playerAnimator = _motionHandler.PlayerAnimator;
         }
-
-        protected IEnumerator DashReturn() {
-            dashPossible = false;
-            yield return new WaitForSeconds(motionComponent.ReturnTimeDash);
-            dashPossible = true;
-        }
-
     }
 }

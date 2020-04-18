@@ -11,11 +11,13 @@ namespace Scaramouche.Game {
             private set { currentState = value; }
         }
 
-        public bool isCurentState => CurrentState != null;
-
-        public void Initialize(IMovement _startingState) {
+        public MotionStateMachine(IMovement _startingState) {
             CurrentState = _startingState;
             CurrentState.Enter();
+        }
+
+        public static MotionStateMachine Initialize(IMovement _startingState) {
+            return new MotionStateMachine(_startingState);            
         }
 
         public void ChangeMovementState(IMovement _newState) {

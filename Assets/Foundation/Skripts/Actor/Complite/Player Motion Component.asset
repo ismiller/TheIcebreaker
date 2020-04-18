@@ -12,8 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: caf5fc5e30e1f72438c5567ed9263d8c, type: 3}
   m_Name: Player Motion Component
   m_EditorClassIdentifier: 
-  groundRayCast: 1
-  sphereRayCast: 0
   rotateSpeed: 8
   gravitySpeed: 8
   forvardSpeed: 9
@@ -27,7 +25,7 @@ MonoBehaviour:
   dashStep: 0.2
   returnTimeDash: 0.25
   jumpSpeed: 4
-  jumpTime: 7
+  jumpTime: 4
   jumpStep: 0.1
   speedIfBeginSlope: 20
   speedIfEndSlope: 10

@@ -4,40 +4,62 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 namespace Scaramouche.Game {
-    public class CameraMotionHandler : BaseMainHandler, ITick, ITickLate {
+    public class CameraMotionHandler : BaseMainHandler, IUpdateHandler, ILateUpdateHandler {
 
-        private CameraMotionComponent motionComponent;
-        //------------
-        private Transform player;
-        private Transform camera;
-        private Vector3 currentPointView;
-        private Vector3 lastPointView;
+        private CameraActor cameraActor;
+        private CameraMotionComponent motionComponent => cameraActor.MotionComponent;
+        private Transform camera => cameraActor.Player;
+        private Vector3 currentPointView, lastPointView;
+        private float valueTurn, valueKeyTurn;
         private Vector2 cameraRotate;
         private bool isMoveInPoint;
-        private float valueTurn;
-        private float valueKeyTurn;
+        private Transform player;
         //------------
         private float screenWidth;
         private float leftTurnArea;
         private float rightTurnArea;
+        private ITask calculateArea;
+        
+        private ITask GetCalculateArea {
+            get {
+                if (calculateArea == null) {
+                    calculateArea = Task.CreateTask(CalculateArea());
+                }
+                return calculateArea;
+            }
+        }
 
-        public CameraMotionHandler(CameraActor _cameraActor) : base(_cameraActor) {
-            camera = _cameraActor.Player;
-            motionComponent = _cameraActor.MotionComponent;
+        public CameraMotionHandler() : base() { }
+
+        public override void Initialize(Actor _actor) {
+            base.Initialize(_actor);
+            cameraActor = (CameraActor)_actor;
             cameraRotate = new Vector2(camera.eulerAngles.x, camera.eulerAngles.y);
+        }
+
+        public override void StartHandle() {
+            GetCalculateArea.Start();
             InputManager.GetKeyRotate += _value => valueKeyTurn = _value;
-            UpdateManager.AddTo(this);
-            Task.CreateTask(CalculateArea()).Start();
         }
 
-        public void Tick() {
-            if (valueKeyTurn == 0) { CalculateMouseTurnValue(); }
-            else { valueTurn = valueKeyTurn; }
+        public override void StopHandle() {
+            GetCalculateArea.Stop();
+            InputManager.GetKeyRotate -= _value => valueKeyTurn = _value;
         }
 
-        public void TickLate() {
+        public void UpdateHandler() {
+            if (valueKeyTurn == 0) { 
+                CalculateMouseTurnValue(); 
+            } else { 
+                valueTurn = valueKeyTurn; 
+            }
+        }
+
+        public void LateUpdateHandler() {
             SetPointView();
-            if ((motionComponent.ISRotate) && (valueTurn != 0)) { Rotation(); }
+            if (motionComponent.ISRotate) { 
+                Rotation(); 
+            }
             Movement();
         }
 
@@ -48,6 +70,7 @@ namespace Scaramouche.Game {
         }
 
         private void Movement() {
+            
             if (motionComponent.IsFollow && (!isMoveInPoint)) {
                 Vector3 newPposition = CalculateNewPosition(currentPointView);
                 camera.position = newPposition;
@@ -59,8 +82,11 @@ namespace Scaramouche.Game {
             if (motionComponent.IsFollow && isMoveInPoint) {
                 camera.position = Vector3.MoveTowards(camera.position, newPosition, _speed * Time.deltaTime);
             }
-            if (camera.position != newPosition) { return true; }
-            else { return false; }
+            if (camera.position != newPosition) { 
+                return true; 
+            } else { 
+                return false; 
+            }
         }
 
         private Vector3 CalculateNewPosition(Vector3 _pointView) {
@@ -73,12 +99,14 @@ namespace Scaramouche.Game {
                 valueTurn = -1;
             } else if (mousePositionX > rightTurnArea) {
                 valueTurn = 1;
-            } else { valueTurn = valueKeyTurn; }
+            } else { 
+                valueTurn = valueKeyTurn; 
+            }
         }
 
         private void SetPointView() {
             if (player && (!isMoveInPoint) ) { 
-                SetPointView(player.position); 
+                SetPointView(player.position);
             }
         }
 

@@ -20,4 +20,5 @@ MonoBehaviour:
   animatorController: {fileID: 9100000, guid: 9c4ba5ac9146226458842f7b2d800f31, type: 2}
   playerAvatar: {fileID: 0}
   aplayRootMotion: 0
+  updateMode: 0
   cullingMode: 0

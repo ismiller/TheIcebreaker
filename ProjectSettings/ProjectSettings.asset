@@ -12,8 +12,8 @@ PlayerSettings:
   targetDevice: 2
   useOnDemandResources: 0
   accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: TestNewSystemManager
+  companyName: '[scaramouche]'
+  productName: The Icebreaker
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.78208435, g: 0.8734936, b: 0.8962264, a: 1}
@@ -606,7 +606,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Template_3D
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: The Icebreaker
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0

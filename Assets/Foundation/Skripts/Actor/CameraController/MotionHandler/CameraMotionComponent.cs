@@ -2,7 +2,7 @@
 
 namespace Scaramouche.Game {
     [CreateAssetMenu(fileName = "Camera Motion Handler", menuName = "Camera Component/Motion Handler")]
-    public class CameraMotionComponent : ControlComponent {
+    public class CameraMotionComponent : ControlComponent<CameraMotionHandler> {
 
         [SerializeField] private bool isFollow;
         [SerializeField] private bool isRotate;
@@ -15,16 +15,5 @@ namespace Scaramouche.Game {
         public float Sensitivity { get { return sensitivity; } }
         public float Offset { get { return offset; } }
         public float AreaTurnMouse { get { return areaTurnMouse; } }
-        //------------
-        private CameraMotionHandler mainHandler;
-        public CameraMotionHandler MainHandler { get { return mainHandler; } }
-
-        public override void Initialize(Transform _camera) {
-            mainHandler = new CameraMotionHandler(_camera.GetComponent<CameraActor>());
-        }
-
-        public override BaseMainHandler GetMainHandler() {
-            return MainHandler;
-        }
     }
 }

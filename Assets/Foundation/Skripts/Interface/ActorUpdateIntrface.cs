@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 namespace Scaramouche.Game {
-    public interface IUpdateActor {
-        void UpdateActor();
+    public interface IUpdateHandler {
+        void UpdateHandler();
     }
 
-    public interface IFixedUpdateActor {
-        void FixedUpdateActor();
+    public interface IFixedUpdateHandler {
+        void FixedUpdateHandler();
     }
 
-    public interface ILateUpdateActor {
-        void LateUpdateActor();
+    public interface ILateUpdateHandler {
+        void LateUpdateHandler();
     }
 }

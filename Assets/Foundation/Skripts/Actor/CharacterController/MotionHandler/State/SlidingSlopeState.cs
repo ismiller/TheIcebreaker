@@ -26,8 +26,8 @@ namespace Scaramouche.Game {
 
         public void PhisicUpdate() {
             if(Vector3.Distance(player.position, targetPoint) < 1) {
-                if ((++nextPoint) < motionHandler.PatchTemp.Length) {
-                    rotateDirection = targetPoint = motionHandler.PatchTemp[nextPoint];
+                if ((++nextPoint) < motionHandler.GetPatchTemp.Length) {
+                    rotateDirection = targetPoint = motionHandler.GetPatchTemp[nextPoint];
                     direction = characterMotor.ComputeDirectionDependPoint(targetPoint);
                     rotateDirection -= player.position;
                 } else { rotateDirection = rotateDirection.normalized; }
@@ -47,7 +47,7 @@ namespace Scaramouche.Game {
                 currentSpeed = Mathf.MoveTowards(currentSpeed, 0, Time.deltaTime);
                 yield return null;
             }
-            motionStateMachine.ChangeMovementState(motionHandler.valkState);
+            motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState);
         }
     }
 }
