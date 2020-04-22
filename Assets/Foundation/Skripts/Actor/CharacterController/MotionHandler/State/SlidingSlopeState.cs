@@ -8,12 +8,14 @@ namespace Scaramouche.Game {
         private Vector3 targetPoint;
         private int nextPoint;
         private float currentSpeed;
+        private bool endSlope;
 
         public SlidingSlopeState(PlayerMotionHandler _motionHandler) : base(_motionHandler) {
 
         }
 
         public void Enter() {
+            endSlope = false;
             rotateDirection = targetPoint = characterMotor.SearchStartPointInArray(out nextPoint);
             direction = characterMotor.ComputeDirectionDependPoint(targetPoint);  
             currentSpeed = characterMotor.ComputeSlidingSpeed();   
@@ -21,7 +23,7 @@ namespace Scaramouche.Game {
         }
 
         public void LogicUpdate() {
-            if (!motionHandler.IsSlope) { Task.CreateTask(EndSliding()).Start(); }
+
         }
 
         public void PhisicUpdate() {
@@ -30,7 +32,11 @@ namespace Scaramouche.Game {
                     rotateDirection = targetPoint = motionHandler.GetPatchTemp[nextPoint];
                     direction = characterMotor.ComputeDirectionDependPoint(targetPoint);
                     rotateDirection -= player.position;
-                } else { rotateDirection = rotateDirection.normalized; }
+                } else if (!endSlope) { 
+                    rotateDirection = rotateDirection.normalized; 
+                    Task.CreateTask(EndSliding()).Start();
+                    endSlope = true;
+                }
             } 
             if (rotateDirection != Vector3.zero) {
                 characterMotor.RotateDirection(rotateDirection); 
@@ -43,8 +49,9 @@ namespace Scaramouche.Game {
         }
 
         private IEnumerator EndSliding() {
+            currentSpeed *= 0.5f; 
             while (currentSpeed > 0) {
-                currentSpeed = Mathf.MoveTowards(currentSpeed, 0, Time.deltaTime);
+                currentSpeed = Mathf.MoveTowards(currentSpeed, 0, 0.2f);
                 yield return null;
             }
             motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState);

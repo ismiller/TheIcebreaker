@@ -45,15 +45,21 @@
     <ImplicitlyExpandDesignTimeFacades>false</ImplicitlyExpandDesignTimeFacades>
   </PropertyGroup>
   <ItemGroup>
-     <Compile Include="Assets\Foundation\Skripts\Actor\Actor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\BaseActors\Actor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\BaseActors\ActorCharacter.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\BaseActors\ActorInteraction.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\BaseActors\ActorObstacle.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\BaseActors\ActorSurface.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\BaseActors\ActorTriggerZone.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\BaseMainHandler\BaseMainHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\CameraActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraMotionComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CameraController\MotionHandler\CameraMotionHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\ActorParametrs\CharacterActorParametrs.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\ActorParametrs\NullableHandler.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\CharacterActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MediatorCharacterHandler.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\InterplayHandler\InterplayComponent.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\InterplayHandler\InterplayHandler.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MediatorController.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\Data\InputDataForState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\MotionStateMachine.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\PlayerMotionComponent.cs" />
@@ -64,31 +70,31 @@
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\MoveStateBox.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\SlidingSlopeState.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\State\ValkState.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\RayCastHandler\RayCastComponent.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\RayCastHandler\RayCastHandler.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\PlayerActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\ControlComponent.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\InteractionActors\RemoteControlActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\InteractionActors\SelectionItemsActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\ObstacleActors\NullableObstacleActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\ObstacleActors\ObstacleActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\SurfaceActors\DefoltSurfaceActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\SurfaceActors\MovePlatformActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\SurfaceActors\SlopeSurfaceActor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\EnvironmentActors\ZoneActors\ImpactZoneActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\GeneralScripts\CharacterMotor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\DefoltSurfaceActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\MovePlatformActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\ObstacleActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\SlopeSurfaceActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\TriggerActor.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Actor\SurfaceActor\TriggerStay.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurves.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurvesActor.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurvesAdjustment.cs" />
      <Compile Include="Assets\Foundation\Skripts\BezierCurves\BezierCurvesEditor.cs" />
      <Compile Include="Assets\Foundation\Skripts\Input\InputContoller.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\ActorUpdateIntrface.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IAcceptVisitorRayCast.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IAcceptVisitorTrigger.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\IAcceptRayCast.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IAwake.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IMediator.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\IInterplay.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IMovement.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\IStateLoad.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\ITask.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\ITriggerHandler.cs" />
-     <Compile Include="Assets\Foundation\Skripts\Interface\IVisitorEnvironment.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\IVisitor.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Interface\MediatorInterface.cs" />
      <Compile Include="Assets\Foundation\Skripts\Interface\TickInterface.cs" />
      <Compile Include="Assets\Foundation\Skripts\Managers\Component\MonoHostComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Managers\InputManager\InputManager.cs" />
@@ -214,6 +220,18 @@
  </Reference>
  <Reference Include="UnityEditor.UI">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.EditorCoroutines.Editor">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.MemoryProfiler">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.MemoryProfiler.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.MemoryProfiler.Editor">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.MemoryProfiler.Editor.dll</HintPath>
  </Reference>
  <Reference Include="UnityEngine">
  <HintPath>C:/Program Files/Unity/Hub/Editor/2019.3.0f1/Editor/Data/Managed/UnityEngine/UnityEngine.dll</HintPath>

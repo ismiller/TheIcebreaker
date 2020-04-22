@@ -4,16 +4,14 @@ using UnityEngine;
 
 namespace Scaramouche.Game {
     public abstract class BaseMainHandler {
-        
-        protected Transform characterTransform;
-        public Transform CharacterTransform { get { return characterTransform; } }
 
-        public BaseMainHandler() {
+        private Actor actor;
+        protected Transform player => actor.Player;
 
-        }
+        public BaseMainHandler() { }
 
         public virtual void Initialize(Actor _actor){
-            characterTransform = _actor.Player;
+            actor = _actor;
         }
 
         public abstract void StartHandle();

@@ -4,7 +4,7 @@ using UnityEngine;
 using System;
 
 namespace Scaramouche.Game {
-    public class CameraActor : Actor {
+    public class CameraActor : ActorCharacter {
 
         [SerializeField] private CameraMotionComponent motionComponent;
         private static Transform mainCamera;
@@ -22,11 +22,12 @@ namespace Scaramouche.Game {
             get { return mainCamera.up; }
         }
 
-        private void Start() {
+        protected override void Start() {
             mainCamera = Player;
             HandlerInitialize(motionComponent.GetHandler(this));
             UpdateManager.AddTo(this);
             isFirstStart = false;
+            base.Start();
         }
 
         protected override void OnEnable() {

@@ -205,3 +205,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   parametrsComponent: {fileID: 11400000, guid: fccf4f8ba23887044be2bf1cf1ea8e50, type: 2}
   motionComponent: {fileID: 11400000, guid: bf44a04c4d2d00e40859754791185569, type: 2}
+  rayCastComponent: {fileID: 11400000, guid: 6af1ada13bf52d743a1ca1dfb7c5995b, type: 2}

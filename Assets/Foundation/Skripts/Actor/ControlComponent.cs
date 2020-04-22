@@ -13,7 +13,6 @@ namespace Scaramouche.Game {
                 handler.Initialize(_actor);
             }
             return handler;
-
         }
     }
 }

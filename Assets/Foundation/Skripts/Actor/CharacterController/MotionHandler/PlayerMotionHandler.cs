@@ -1,25 +1,24 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Scaramouche.Game {
-    public class PlayerMotionHandler : BaseMainHandler, IVisitorEnvironment, IUpdateHandler, ILateUpdateHandler, IMessageRecipients {
+    public class PlayerMotionHandler : BaseMainHandler, IUpdateHandler, ILateUpdateHandler {
         
-        private CharacterActor characterActor;
+        private PlayerActor actor;
         private CharacterMotor characterMotor;
         private MoveStateBox moveStateBox;
         private MotionStateMachine motionStateMachine;
-        private ITask taskGraundCast, taskForvardCast; 
         private ITask taskSlidingPosition => Task.CreateTask(CalculateSlidingPosition());
-        private Vector3[] patchTemp;
         private Vector3 obstaclePoint;
         private SurfaceType surfaceTemp;
-        private float distanceStartSliding => characterActor.MotionComponent.StartSlidingDist;
+        private float distanceStartSliding => actor.MotionComponent.StartSlidingDist;
         private bool isDefoltGround => (surfaceTemp == SurfaceType.Defolt) ? true : false;
-
+        private MediatorController mediator => actor.Mediator;
         //------------
-        public CharacterActor GetCharacterActor {
-            get { return characterActor; }
+        public PlayerActor GetCharacterActor {
+            get { return actor; }
         }
 
         public MoveStateBox GetMoveStateBox {
@@ -34,43 +33,43 @@ namespace Scaramouche.Game {
             get { return characterMotor ?? (characterMotor = new CharacterMotor(this)); } 
         }
 
-        public Vector3[] GetPatchTemp { get { return patchTemp; } }
+        public Vector3[] GetPatchTemp { get; private set; }
 
         public Vector3 GetObstaclePoint { get { return obstaclePoint; } }
 
-        public bool IsObstacle { get; private set; }
-        public bool IsSlope { get; private set; }
-        public bool IsBeginSlope { get; private set; }
-        public bool IsPlatform { get; private set; }
+        public bool IsObstacle { get; private set; } = false;
+        public bool IsSlope { get; private set; } = false;
+        public bool IsBeginSlope { get; private set; } = false;
+        public bool IsPlatform { get; private set; } = false;
+        public bool IsTrigger { get; private set; } = false;
 
-        private enum SurfaceType {
-            Defolt, Slope, MovePlatform, None
-        }
+        private enum SurfaceType { Defolt, Slope, MovePlatform, None }
 
-        public PlayerMotionHandler() : base() {
-
-        }
+        public PlayerMotionHandler() : base() { /* */ }
 
         public override void Initialize(Actor _actor) {
             base.Initialize(_actor);
-            characterActor = (CharacterActor)_actor;
+            actor = (PlayerActor)_actor;
         }
 
         public override void StartHandle() {
-
+            InputManager.GetKeyInteract += (bool _value) => isinteract = _value;
+            mediator.AddSubscribe<M_TriggerInteract>(ReactionOnTrigger);
+            mediator.AddSubscribe<M_Nullable>(ReadMesageNulable);
+            mediator.AddSubscribe<M_Obstacle>(ReadMesageObstacle);
+            mediator.AddSubscribe<M_SlopeSurface>(ReadMesageSlope);
+            mediator.AddSubscribe<M_DefoltSurface>(ReadMesageDefolt);
+            mediator.AddSubscribe<M_MovePlatform>(ReadMesageMovePlatform); 
         }
 
         public override void StopHandle() {
             taskSlidingPosition.Stop();
-        }
-
-        public void Notify<T>(T _actor) {
-            if (_actor is IAcceptVisitorRayCast) CallAccept(_actor as IAcceptVisitorRayCast);
-        }
-
-        private void CallAccept(IAcceptVisitorRayCast _actor) {
-            _actor.AcceptDownCast(this);
-            _actor.AcceptForwardCast(this);
+            mediator.RemoveSubscribe<M_TriggerInteract>(ReactionOnTrigger);
+            mediator.RemoveSubscribe<M_Nullable>(ReadMesageNulable); 
+            mediator.RemoveSubscribe<M_Obstacle>(ReadMesageObstacle);
+            mediator.RemoveSubscribe<M_SlopeSurface>(ReadMesageSlope);
+            mediator.RemoveSubscribe<M_DefoltSurface>(ReadMesageDefolt);
+            mediator.RemoveSubscribe<M_MovePlatform>(ReadMesageMovePlatform);  
         }
 
         public void UpdateHandler() {
@@ -83,9 +82,9 @@ namespace Scaramouche.Game {
 
         private IEnumerator CalculateSlidingPosition() {
             float distanceEnd; float distanceStart;
-            distanceStart = Vector3.Distance(CharacterTransform.position, patchTemp[0]);
-            while ((patchTemp != null) && !IsSlope) {
-                distanceEnd = Vector3.Distance(CharacterTransform.position, patchTemp[patchTemp.Length - 1]);
+            distanceStart = Vector3.Distance(player.position, GetPatchTemp[0]);
+            while ((GetPatchTemp != null) && !IsSlope) {
+                distanceEnd = Vector3.Distance(player.position, GetPatchTemp[GetPatchTemp.Length - 1]);
                 if (distanceStart < distanceEnd) {
                     IsSlope = IsBeginSlope = true;
                 } else if (distanceEnd < distanceStart) {
@@ -98,38 +97,58 @@ namespace Scaramouche.Game {
             }
         }
 
-        public void Visit(ObstacleActor _actor) {   
-            IsObstacle = true;
+        private void ReadMesageNulable(M_Nullable _mesage) {
+            IsObstacle = false;
         }
 
-        public void Visit(SlopeSurfaceActor _actor) {
+        public void ReadMesageObstacle(M_Obstacle _mesage) {  
+            if (_mesage.actor.GetObstacleCollider) {
+                obstaclePoint = _mesage.actor.GetObstacleCollider.ClosestPoint(player.position); 
+                IsObstacle = true;    
+            }
+        }
+
+        public void ReadMesageSlope(M_SlopeSurface _mesage) {
             if (isDefoltGround){
                 surfaceTemp = SurfaceType.Slope;
-                patchTemp = new Vector3[_actor.GetSlidingPath().Length];
-                for (var i = 0; i < patchTemp.Length; i++) {
-                    patchTemp[i] = _actor.GetSlidingPath()[i];
+                GetPatchTemp = new Vector3[_mesage.actor.GetSlidingPath().Length];
+                for (var i = 0; i < GetPatchTemp.Length; i++) {
+                    GetPatchTemp[i] = _mesage.actor.GetSlidingPath()[i];
                 }
                 taskSlidingPosition.Start();
             }
         }
 
-        public void Visit(DefoltSurfaceActor _actor) {
+        public void ReadMesageDefolt(M_DefoltSurface _mesage) {
             if (!isDefoltGround) {
-                CharacterTransform.SetParent(null);
                 surfaceTemp = SurfaceType.Defolt;
+                player.SetParent(null);
                 IsSlope = IsPlatform = false;
-                patchTemp = null;
+                GetPatchTemp = null;
             }
         }
 
-        public void Visit(MovePlatformActor _actor) {
+        public void ReadMesageMovePlatform(M_MovePlatform _mesage) {
             if (isDefoltGround) {
-                CharacterTransform.SetParent(_actor.Player);
+                player.SetParent(_mesage.actor.Player);
                 surfaceTemp = SurfaceType.MovePlatform; 
                 IsPlatform = true; 
-                _actor.StartMove();
             }   
         }
-        
+
+        private bool isinteract = false;
+
+        public void ReactionOnTrigger(M_TriggerInteract _mesage) {
+            if (_mesage.eventType == TriggerEventType.Enter) {
+                IsTrigger = true;
+            } else if (_mesage.eventType == TriggerEventType.Exit) {
+                IsTrigger = false;
+            }   
+            if (IsTrigger && isinteract) {
+                _mesage.actor.Use();
+                isinteract = false;
+            } 
+        }
+
     }
 }

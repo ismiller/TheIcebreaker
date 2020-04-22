@@ -28,5 +28,5 @@ MonoBehaviour:
   jumpTime: 4
   jumpStep: 0.1
   speedIfBeginSlope: 20
-  speedIfEndSlope: 10
+  speedIfEndSlope: 15
   distanceStartSliding: 6

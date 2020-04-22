@@ -5,7 +5,6 @@ using UnityEngine;
 namespace Scaramouche.Game {
     public class ValkState : BaseMovementState, IMovement {
 
-        private int slidingPoint;
         private float currentSpeed;
 
         public ValkState(PlayerMotionHandler _motionHandler) : base(_motionHandler) {

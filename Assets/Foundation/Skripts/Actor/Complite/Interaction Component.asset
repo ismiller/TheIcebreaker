@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 041e8fd7b47796a4db4ff80db228ec21, type: 3}
-  m_Name: Camera Motion Component
+  m_Script: {fileID: 11500000, guid: bc58f3e78fcb19e49af9c60f3c0adcf0, type: 3}
+  m_Name: Interaction Component
   m_EditorClassIdentifier: 
-  isFollow: 1
-  isRotate: 1
-  sensitivity: 2
-  offset: 10.5
-  areaTurnMouse: 10
+  forwardCast: 1
+  forwardLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  downCast: 1.3
+  downLayer:
+    serializedVersion: 2
+    m_Bits: 256

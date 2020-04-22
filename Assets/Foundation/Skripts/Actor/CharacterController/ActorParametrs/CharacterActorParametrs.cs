@@ -20,7 +20,7 @@ namespace Scaramouche.Game {
         [SerializeField] private AnimatorUpdateMode updateMode;
         [SerializeField] private AnimatorCullingMode cullingMode;
 
-        public Animator AddAnimator(CharacterActor _actor) {
+        public Animator AddAnimator(PlayerActor _actor) {
             var tempAnimator = _actor.Player.GetChild(0).transform.gameObject.AddComponent<Animator>();
             tempAnimator.runtimeAnimatorController = animatorController;
             tempAnimator.avatar = playerAvatar;
@@ -30,7 +30,7 @@ namespace Scaramouche.Game {
             return tempAnimator;
         }
 
-        public CharacterController AddCharacterController(CharacterActor _actor) {
+        public CharacterController AddCharacterController(PlayerActor _actor) {
             var tempCHController = _actor.Player.gameObject.AddComponent<CharacterController>();
             tempCHController.slopeLimit = slopeLimit;
             tempCHController.stepOffset = stepOffset;
