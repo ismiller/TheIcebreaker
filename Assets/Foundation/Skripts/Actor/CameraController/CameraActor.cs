@@ -8,7 +8,6 @@ namespace Scaramouche.Game {
 
         [SerializeField] private CameraMotionComponent motionComponent;
         private static Transform mainCamera;
-        private bool isFirstStart = true;
 
         public CameraMotionComponent MotionComponent { 
             get { return motionComponent; } 
@@ -26,22 +25,11 @@ namespace Scaramouche.Game {
             mainCamera = Player;
             HandlerInitialize(motionComponent.GetHandler(this));
             UpdateManager.AddTo(this);
-            isFirstStart = false;
             base.Start();
         }
 
-        protected override void OnEnable() {
-            if (!isFirstStart) {
-                base.OnEnable();
-                UpdateManager.AddTo(this);
-            }
-        }
-
-        protected override void OnDisable() {
-            base.OnDisable();
-            if (!Toolbox.isApplicationQuitting) 
-                UpdateManager.RemoveFrom(this);;
-        }
+        protected override void OnEnable() => base.OnEnable();
+        protected override void OnDisable() => base.OnDisable();
 
         public void SetPlayer(Transform _player) {
             motionComponent.GetHandler(this).RefreshPlayer(_player);

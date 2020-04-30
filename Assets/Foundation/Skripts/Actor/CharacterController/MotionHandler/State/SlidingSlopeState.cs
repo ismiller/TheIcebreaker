@@ -16,10 +16,10 @@ namespace Scaramouche.Game {
 
         public void Enter() {
             endSlope = false;
-            rotateDirection = targetPoint = characterMotor.SearchStartPointInArray(out nextPoint);
-            direction = characterMotor.ComputeDirectionDependPoint(targetPoint);  
-            currentSpeed = characterMotor.ComputeSlidingSpeed();   
-            playerAnimator.SetBool("isSliding", true);
+            rotateDirection = targetPoint = dataBox.GetCharacterMotor.SearchStartPointInArray(out nextPoint);
+            direction = dataBox.GetCharacterMotor.ComputeDirectionDependPoint(targetPoint);  
+            currentSpeed = dataBox.GetCharacterMotor.ComputeSlidingSpeed();   
+            dataBox.GetAnimator.SetBool("isSliding", true);
         }
 
         public void LogicUpdate() {
@@ -27,11 +27,11 @@ namespace Scaramouche.Game {
         }
 
         public void PhisicUpdate() {
-            if(Vector3.Distance(player.position, targetPoint) < 1) {
+            if(Vector3.Distance(dataBox.GetTransform.position, targetPoint) < 1) {
                 if ((++nextPoint) < motionHandler.GetPatchTemp.Length) {
                     rotateDirection = targetPoint = motionHandler.GetPatchTemp[nextPoint];
-                    direction = characterMotor.ComputeDirectionDependPoint(targetPoint);
-                    rotateDirection -= player.position;
+                    direction = dataBox.GetCharacterMotor.ComputeDirectionDependPoint(targetPoint);
+                    rotateDirection -= dataBox.GetTransform.position;
                 } else if (!endSlope) { 
                     rotateDirection = rotateDirection.normalized; 
                     Task.CreateTask(EndSliding()).Start();
@@ -39,13 +39,13 @@ namespace Scaramouche.Game {
                 }
             } 
             if (rotateDirection != Vector3.zero) {
-                characterMotor.RotateDirection(rotateDirection); 
+                dataBox.GetCharacterMotor.RotateDirection(rotateDirection); 
             }
-            characterMotor.MovementSlidingSlope(direction);
+            dataBox.GetCharacterMotor.MovementSlidingSlope(direction);
         }
 
         public void Exit() {
-            playerAnimator.SetBool("isSliding", false);
+            dataBox.GetAnimator.SetBool("isSliding", false);
         }
 
         private IEnumerator EndSliding() {
@@ -54,7 +54,7 @@ namespace Scaramouche.Game {
                 currentSpeed = Mathf.MoveTowards(currentSpeed, 0, 0.2f);
                 yield return null;
             }
-            motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState);
+            dataBox.GetStateMachine.ChangeMovementState(dataBox.GetStateBox.GetValkState);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Scaramouche.Game {
         }
 
         public void LogicUpdate() {
-            if (stopDash) { motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState); }
+            if (stopDash) { dataBox.GetStateMachine.ChangeMovementState(dataBox.GetStateBox.GetValkState); }
         }
 
         public void PhisicUpdate() {
@@ -32,7 +32,7 @@ namespace Scaramouche.Game {
                 if (!startDash) {
                     startDash = true;
                     dashTask.Start();
-                    playerAnimator.SetTrigger("Dash");
+                    dataBox.GetAnimator.SetTrigger("Dash");
                 }
             } else { stopDash = true; }
         }
@@ -44,7 +44,7 @@ namespace Scaramouche.Game {
         private IEnumerator DashMove() {
             while (!stopDash) {
                 yield return null;
-                if (!characterMotor.MovementDash(direction)) { 
+                if (!dataBox.GetCharacterMotor.MovementDash(direction)) { 
                     stopDash = true; 
                 }
             }

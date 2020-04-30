@@ -7,7 +7,7 @@ namespace Scaramouche.Game {
         
         private T handler;
 
-        public T GetHandler(Actor _actor) { 
+        public T GetHandler(ActorCharacter _actor) { 
             if (handler == null) {
                 handler = new T();
                 handler.Initialize(_actor);

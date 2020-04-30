@@ -6,9 +6,9 @@ namespace Scaramouche.Game {
     public class CharacterMotor {
         
         private PlayerMotionHandler motionHandler;
-        private PlayerMotionComponent motionComponent => motionHandler.GetCharacterActor.MotionComponent;
-        private CharacterController chController => motionHandler.GetCharacterActor.PlayerCHController;
-        private Transform player => motionHandler.GetCharacterActor.Player;
+        private MotionDataBox dataBox => motionHandler.GetDataBox;
+        private PlayerMotionComponent motionComponent => dataBox.GetMotionComponent;
+        private Transform player => dataBox.GetTransform;
         //------------
         private Vector3 moveDirection;
         private Vector2 currenDirection;
@@ -118,7 +118,7 @@ namespace Scaramouche.Game {
         }
 
         public Vector3 ApplyGravity(Vector3 _direction) {
-            if(!chController.isGrounded) { _direction.y = -motionComponent.GravitySpeed * 2.5f * Time.deltaTime;             
+            if(!dataBox.GetCHController.isGrounded) { _direction.y = -motionComponent.GravitySpeed * 2.5f * Time.deltaTime;             
             } else {  _direction.y = -1.0f; }
             return _direction;
         }
@@ -126,7 +126,7 @@ namespace Scaramouche.Game {
         private void Move(Vector3 _direction, float _speed, bool _isGravity) {
             _direction = ComputeDirectionDependSpeed(_direction, _speed);
             if (_isGravity) { _direction = ApplyGravity(_direction); }
-            chController.Move(Vector3.ClampMagnitude(_direction, _speed));
+            dataBox.GetCHController.Move(Vector3.ClampMagnitude(_direction, _speed));
         }
     }
 }

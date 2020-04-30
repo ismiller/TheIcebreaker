@@ -6,12 +6,7 @@ namespace Scaramouche.Game {
     public abstract class BaseMovementState {
 
         protected PlayerMotionHandler motionHandler;
-        protected Transform player => motionHandler.GetCharacterActor.Player;
-        protected CharacterMotor characterMotor => motionHandler.GetCharacterMotor;
-        protected Animator playerAnimator => motionHandler.GetCharacterActor.PlayerAnimator;
-        protected MotionStateMachine motionStateMachine => motionHandler.GetMotionStateMachine;
-        protected CharacterController chController => motionHandler.GetCharacterActor.PlayerCHController;
-        protected PlayerMotionComponent motionComponent => motionHandler.GetCharacterActor.MotionComponent;
+        protected MotionDataBox dataBox;
 
         protected Vector2 direction;
         protected Vector3 rotateDirection;
@@ -20,6 +15,7 @@ namespace Scaramouche.Game {
 
         protected BaseMovementState(PlayerMotionHandler _motionHandler) {
             motionHandler = _motionHandler;
+            dataBox = _motionHandler.GetDataBox;
         }
     }
 }

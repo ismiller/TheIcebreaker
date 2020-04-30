@@ -61,6 +61,7 @@
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\InterplayHandler\InterplayHandler.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MediatorController.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\Data\InputDataForState.cs" />
+     <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\MotionDataBox.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\MotionStateMachine.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\PlayerMotionComponent.cs" />
      <Compile Include="Assets\Foundation\Skripts\Actor\CharacterController\MotionHandler\PlayerMotionHandler.cs" />
@@ -194,8 +195,14 @@
  <Reference Include="Unity.TextMeshPro.Editor">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
  </Reference>
+ <Reference Include="Unity.EditorCoroutines.Editor">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
+ </Reference>
  <Reference Include="UnityEngine.UI">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="Unity.MemoryProfiler">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.MemoryProfiler.dll</HintPath>
  </Reference>
  <Reference Include="Unity.Timeline">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
@@ -218,17 +225,11 @@
  <Reference Include="Unity.TextMeshPro">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
  </Reference>
- <Reference Include="UnityEditor.UI">
- <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
- </Reference>
  <Reference Include="Unity.Performance.Profile-Analyzer.Editor">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.Performance.Profile-Analyzer.Editor.dll</HintPath>
  </Reference>
- <Reference Include="Unity.EditorCoroutines.Editor">
- <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.EditorCoroutines.Editor.dll</HintPath>
- </Reference>
- <Reference Include="Unity.MemoryProfiler">
- <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.MemoryProfiler.dll</HintPath>
+ <Reference Include="UnityEditor.UI">
+ <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
  </Reference>
  <Reference Include="Unity.MemoryProfiler.Editor">
  <HintPath>D:/Unity_Ptoject/The Icebreaker - Game/Library/ScriptAssemblies/Unity.MemoryProfiler.Editor.dll</HintPath>

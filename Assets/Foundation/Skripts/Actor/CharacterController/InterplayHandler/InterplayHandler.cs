@@ -15,7 +15,7 @@ namespace Scaramouche.Game {
 
         public InterplayHandler() : base() { }
 
-        public override void Initialize(Actor _actor) {
+        public override void Initialize(ActorCharacter _actor) {
             base.Initialize(_actor);
             actor = (PlayerActor)_actor;
             downCastTask = Task.CreateTask(DownRayCast());

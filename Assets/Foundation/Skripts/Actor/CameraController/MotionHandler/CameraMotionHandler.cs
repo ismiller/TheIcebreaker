@@ -25,7 +25,7 @@ namespace Scaramouche.Game {
 
         public CameraMotionHandler() : base() { }
 
-        public override void Initialize(Actor _actor) {
+        public override void Initialize(ActorCharacter _actor) {
             base.Initialize(_actor);
             actor = (CameraActor)_actor;
             cameraRotate = new Vector2(player.eulerAngles.x, player.eulerAngles.y);

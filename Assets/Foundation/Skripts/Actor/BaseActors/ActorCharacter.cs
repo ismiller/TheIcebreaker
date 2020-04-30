@@ -12,8 +12,11 @@ namespace Scaramouche.Game {
 
         protected IInterplayInterface interplayComonent;
         protected bool isInterplay => interplayComonent != null; 
+        private bool isFirstStart = true;
 
         protected override void Start() {
+            UpdateManager.AddTo(this);
+            isFirstStart = false;
             base.Start();
         }
 
@@ -45,8 +48,17 @@ namespace Scaramouche.Game {
             }
         } 
 
-        protected virtual void OnEnable() => StartHandler();
-        protected virtual void OnDisable() => StopHandler();
+        protected virtual void OnEnable()  {
+            StartHandler();
+            if (!isFirstStart) {
+                UpdateManager.AddTo(this);
+            }
+        }
+        protected virtual void OnDisable() {
+            StopHandler();
+            if (!Toolbox.isApplicationQuitting) 
+                UpdateManager.RemoveFrom(this);
+        }
 
         public bool TryGetInterplayComponent(ref IInterplayInterface _temp) {
             if (isInterplay) {

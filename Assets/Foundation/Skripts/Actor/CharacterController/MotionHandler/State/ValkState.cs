@@ -14,17 +14,17 @@ namespace Scaramouche.Game {
 
         public void Enter() {
             InputManager.GetMousePoint += (Vector3 _value) => rotateDirection = _value;
-            currentSpeed = motionComponent.ForvardSpeed;
+            currentSpeed = dataBox.GetMotionComponent.ForvardSpeed;
             InputManager.GetKeyDash += SetInDash;
         }
 
         public void LogicUpdate() {
-            if (motionHandler.IsSlope) { motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetSlidingSlopeState); }
+            if (motionHandler.IsSlope) { dataBox.GetStateMachine.ChangeMovementState(dataBox.GetStateBox.GetSlidingSlopeState); }
         }
 
         public void PhisicUpdate() {
-            characterMotor.RotateDirection(rotateDirection - player.position);
-            characterMotor.MovementDirectional(direction);
+            dataBox.GetCharacterMotor.RotateDirection(rotateDirection - dataBox.GetTransform.position);
+            dataBox.GetCharacterMotor.MovementDirectional(direction);
         }
 
         public void Exit() {
@@ -34,10 +34,10 @@ namespace Scaramouche.Game {
 
         private void SetInDash(bool _value) {
             if (motionHandler.IsObstacle) {
-                motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetJumpObstacleState);
+                dataBox.GetStateMachine.ChangeMovementState(dataBox.GetStateBox.GetJumpObstacleState);
             } else {
                 if ((direction != Vector2.zero) && dashPossible) {
-                    motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetDashState.Start(direction));
+                    dataBox.GetStateMachine.ChangeMovementState(dataBox.GetStateBox.GetDashState.Start(direction));
                     Task.CreateTask(DashReturn()).Start();
                 }
             }
@@ -45,7 +45,7 @@ namespace Scaramouche.Game {
 
         private IEnumerator DashReturn() {
             dashPossible = false;
-            yield return new WaitForSeconds(motionComponent.ReturnTimeDash);
+            yield return new WaitForSeconds(dataBox.GetMotionComponent.ReturnTimeDash);
             dashPossible = true;
         }
     }

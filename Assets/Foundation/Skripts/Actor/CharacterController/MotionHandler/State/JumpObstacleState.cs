@@ -14,23 +14,23 @@ namespace Scaramouche.Game {
         }
 
         public void Enter() {
-            rotateDirection = (motionHandler.GetObstaclePoint - player.position).normalized;
+            rotateDirection = (motionHandler.GetObstaclePoint - dataBox.GetTransform.position).normalized;
             direction = new Vector2(rotateDirection.x, rotateDirection.z);
             jumpTask = Task.CreateTask(Jump());
             startJump = stopJump = false;
-            chController.height = 1;
-            chController.center = new Vector3(0, 0.7f, 0);
-            playerAnimator.SetTrigger("JumpObstacle");
+            dataBox.GetCHController.height = 1;
+            dataBox.GetCHController.center = new Vector3(0, 0.7f, 0);
+            dataBox.GetAnimator.SetTrigger("JumpObstacle");
         }
 
         public void LogicUpdate() {
             if (stopJump) { 
-                motionStateMachine.ChangeMovementState(motionHandler.GetMoveStateBox.GetValkState); 
+                dataBox.GetStateMachine.ChangeMovementState(dataBox.GetStateBox.GetValkState); 
             }
         }
 
         public void PhisicUpdate() {
-            characterMotor.RotateDirection(rotateDirection);
+            dataBox.GetCharacterMotor.RotateDirection(rotateDirection);
             if (!startJump) {
                 startJump = true;
                 jumpTask.Start();
@@ -39,14 +39,14 @@ namespace Scaramouche.Game {
 
         public void Exit() {
             jumpTask = null;
-            chController.height = 2;
-            chController.center = new Vector3(0, 0, 0);
+            dataBox.GetCHController.height = 2;
+            dataBox.GetCHController.center = new Vector3(0, 0, 0);
         }
 
         private IEnumerator Jump() {
             while(!stopJump) {
                 yield return new WaitForEndOfFrame();
-                if (!characterMotor.JumpObstacle(direction)) {
+                if (!dataBox.GetCharacterMotor.JumpObstacle(direction)) {
                     stopJump = true;
                 }
             }

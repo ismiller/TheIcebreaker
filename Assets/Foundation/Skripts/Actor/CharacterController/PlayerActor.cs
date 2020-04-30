@@ -16,7 +16,6 @@ namespace Scaramouche.Game {
         private MediatorController mediator;
         private CharacterController playerCHController;
         private Animator playerAnimator;
-        private bool isFirstStart = true;
         //------------
         public PlayerMotionComponent MotionComponent { get { return motionComponent; } }
         public CharacterActorParametrs ParametrsComponent { get { return parametrsComponent; } }
@@ -24,10 +23,6 @@ namespace Scaramouche.Game {
 
         public MediatorController Mediator {
             get { return mediator ?? (mediator = new MediatorController()); }
-        }
-
-        public List<BaseMainHandler> GetMainHandlers {
-            get { return mainHandlers; }
         }
 
         public CharacterController PlayerCHController { 
@@ -48,22 +43,15 @@ namespace Scaramouche.Game {
             HandlerInitialize(
                 motionComponent.GetHandler(this), 
                 rayCastComponent.GetHandler(this));
-            UpdateManager.AddTo(this);
-            isFirstStart = false;
             base.Start();
         }
 
         protected override void OnEnable() {
-            if (!isFirstStart) {
-                base.OnEnable();
-                UpdateManager.AddTo(this);
-            }
+            base.OnEnable();
         }
 
         protected override void OnDisable() {
             base.OnDisable();
-            if (!Toolbox.isApplicationQuitting) 
-                UpdateManager.RemoveFrom(this);
         }
 
         private IEnumerator SetPlayerInCamera() {
